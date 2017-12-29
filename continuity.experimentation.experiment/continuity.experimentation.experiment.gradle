@@ -1,0 +1,25 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+dependencies {
+	compile project(':continuity.experimentation.api')
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'org.continuity.experimentation.experiment.Main'
+  }
+}
+
+build.dependsOn {
+	shadowJar
+}
