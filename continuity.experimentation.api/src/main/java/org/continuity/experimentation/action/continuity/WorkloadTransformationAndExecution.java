@@ -24,6 +24,12 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 
 	private final IDataHolder<String> workloadLink;
 
+	private final int numUsers;
+
+	private final long duration;
+
+	private final int rampup;
+
 	/**
 	 * Constructor.
 	 *
@@ -37,13 +43,22 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 	 *            The tag of the annotation to be used.
 	 * @param workloadLink
 	 *            The link to the workload model.
+	 * @param numUsers
+	 *            The number of users for the test.
+	 * @param duration
+	 *            The duration of the test in seconds.
+	 * @param rampup
+	 *            The ramp up time in seconds.
 	 */
-	public WorkloadTransformationAndExecution(String host, String port, String loadTestType, IDataHolder<String> tag, IDataHolder<String> workloadLink) {
+	public WorkloadTransformationAndExecution(String host, String port, String loadTestType, IDataHolder<String> tag, IDataHolder<String> workloadLink, int numUsers, long duration, int rampup) {
 		super(host, port);
 
 		this.loadTestType = loadTestType;
 		this.tag = tag;
 		this.workloadLink = workloadLink;
+		this.numUsers = numUsers;
+		this.duration = duration;
+		this.rampup = rampup;
 	}
 
 	/**
@@ -57,9 +72,15 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 	 *            The tag of the annotation to be used.
 	 * @param workloadLink
 	 *            The link to the workload model.
+	 * @param numUsers
+	 *            The number of users for the test.
+	 * @param duration
+	 *            The duration of the test in seconds.
+	 * @param rampup
+	 *            The ramp up time in seconds.
 	 */
-	public WorkloadTransformationAndExecution(String host, String loadTestType, IDataHolder<String> tag, IDataHolder<String> workloadLink) {
-		this(host, "8080", loadTestType, tag, workloadLink);
+	public WorkloadTransformationAndExecution(String host, String loadTestType, IDataHolder<String> tag, IDataHolder<String> workloadLink, int numUsers, long duration, int rampup) {
+		this(host, "8080", loadTestType, tag, workloadLink, numUsers, duration, rampup);
 	}
 
 	/**
@@ -70,6 +91,9 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 		Map<String, String> message = new HashMap<>();
 		message.put("tag", tag.get());
 		message.put("workload-link", workloadLink.get());
+		message.put("num-users", Integer.toString(numUsers));
+		message.put("duration", Long.toString(duration));
+		message.put("rampup", Integer.toString(rampup));
 
 		String response = post("loadtest/" + loadTestType + "/createandexecute", String.class, message);
 		LOGGER.info("Response from frontend: {}", response);
