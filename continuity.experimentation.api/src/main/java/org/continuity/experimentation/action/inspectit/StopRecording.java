@@ -1,11 +1,13 @@
-package org.continuity.experimentation.action;
+package org.continuity.experimentation.action.inspectit;
 
+import org.continuity.experimentation.action.AbstractRestAction;
+import org.continuity.experimentation.action.RandomSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Stops the recording
- * 
+ *
  * @author Tobias Angerstein
  *
  */
@@ -19,6 +21,7 @@ public class StopRecording extends AbstractRestAction {
 	 * Constructor
 	 */
 	public StopRecording() {
+		// TODO: Make the host and port configurable
 		super("letslx037", "8182");
 	}
 

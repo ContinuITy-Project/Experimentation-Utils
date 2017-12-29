@@ -1,7 +1,9 @@
-package org.continuity.experimentation.action;
+package org.continuity.experimentation.action.inspectit;
 
 import java.io.IOException;
 
+import org.continuity.experimentation.action.AbstractRestAction;
+import org.continuity.experimentation.action.RandomSelection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Creates new storage and starts new recording.
- * 
+ *
  * @author Tobias Angerstein
  *
  */
@@ -29,13 +31,14 @@ public class StartNewRecording extends AbstractRestAction {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param storageName
 	 *            name of new storage
 	 * @param recordingDuration
 	 *            duration of the recording
 	 */
 	public StartNewRecording(String storageName) {
+		// TODO: Make the host and port configurable
 		super("letslx037", "8182");
 		this.storageName = storageName;
 	}

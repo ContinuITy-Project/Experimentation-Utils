@@ -2,7 +2,9 @@ package org.continuity.experimentation.action;
 
 /**
  * Restarts the DVDstore.
- * 
+ *
+ * TODO: Generalize it - e.g., send an arbitrary command to the satellite.
+ *
  * @author Tobias Angerstein
  *
  */
