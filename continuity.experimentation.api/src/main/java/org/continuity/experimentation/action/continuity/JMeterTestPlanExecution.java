@@ -1,15 +1,24 @@
 package org.continuity.experimentation.action.continuity;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/**
+/*
  * Executes a JMeter test plan.
  *
  * @author Henning Schulz
@@ -106,6 +115,32 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 		 */
 		public void setBehaviors(Map<String, String[][]> behaviors) {
 			this.behaviors = behaviors;
+		}
+
+		public void readFromJSON(File file) {
+			try {
+				String json = FileUtils.readFileToString(file, Charset.defaultCharset());
+				ObjectMapper mapper = new ObjectMapper();
+				ObjectNode node = mapper.readValue(json, ObjectNode.class);
+				Map<String, String[][]> behaviors = new HashMap<String, String[][]>();
+				Iterator<String> fieldNameIterator = node.get("behaviors").fieldNames();
+				for(JsonNode behaviorNode: node.get("behaviors")) {
+					String[][] behaviorModelArray = new String[behaviorNode.size()][];
+					
+					for(int i=0; i< behaviorNode.size(); i++) {
+						String [] strings = new String[behaviorNode.get(i).size()];
+						for (int j=0; j< behaviorNode.get(i).size(); j++) {
+							strings[j] = behaviorNode.get(i).get(j).asText();
+						}
+						behaviorModelArray[i] = strings;
+					}
+					behaviors.put(fieldNameIterator.next().toString(), behaviorModelArray);
+				}
+				setBehaviors(behaviors);
+				setTestPlan(node.get("test-plan").asText());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 	}

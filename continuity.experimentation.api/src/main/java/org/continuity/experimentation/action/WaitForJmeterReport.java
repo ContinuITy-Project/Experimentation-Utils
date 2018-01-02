@@ -14,9 +14,19 @@ public class WaitForJmeterReport extends AbstractRestAction {
 	private static final int MAX_ATTEMPTS = 200;
 
 	/**
+	 * run count
+	 */
+	private static int runCount = 0;
+
+	/**
 	 * The desired report destination.
 	 */
 	private String reportDestination;
+
+	/**
+	 * Is running loadtest automatically generated.
+	 */
+	private boolean generatedLoadtest;
 
 	/**
 	 * Constructor.
@@ -30,9 +40,10 @@ public class WaitForJmeterReport extends AbstractRestAction {
 	 * @param reportDestination
 	 *            the report destination.
 	 */
-	public WaitForJmeterReport(String host, String port, String reportDestination) {
+	public WaitForJmeterReport(String host, String port, String reportDestination, boolean generatedLoadtest) {
 		super(host, port);
 		this.reportDestination = reportDestination;
+		this.generatedLoadtest = generatedLoadtest;
 	}
 
 	@Override
@@ -46,7 +57,14 @@ public class WaitForJmeterReport extends AbstractRestAction {
 		}
 		if (!report.isEmpty()) {
 			try {
-				FileUtils.writeStringToFile(new File(reportDestination), report, Charset.defaultCharset());
+				File file = new File(reportDestination);
+				File manipulatedFile = null;
+				if(generatedLoadtest) {
+					manipulatedFile = new File("run#" + runCount + "/generatedLoadtest/" + file.getName());
+				} else {
+					manipulatedFile = new File("run#" + runCount + "/referenceLoadtest/" + file.getName());
+				}
+				FileUtils.writeStringToFile(manipulatedFile, report, Charset.defaultCharset());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

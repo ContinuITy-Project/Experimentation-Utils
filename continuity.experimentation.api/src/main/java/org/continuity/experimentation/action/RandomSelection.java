@@ -20,7 +20,7 @@ public class RandomSelection<T> implements IExperimentAction {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RandomSelection.class);
 
-	private final IDataHolder<List<T>> inputHolder;
+	private final IDataHolder<List> inputHolder;
 	private final IDataHolder<T> outputHolder;
 
 	private final boolean avoidTwiceInARow;
