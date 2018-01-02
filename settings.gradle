@@ -2,6 +2,7 @@ rootProject.name = "continuity.experimentation.root"
 
 include "continuity.experimentation.api"
 include "continuity.experimentation.experiment"
+include "continuity.experimentation.jmetertransformation"
 include "continuity.experimentation.satellite"
 
 /**
