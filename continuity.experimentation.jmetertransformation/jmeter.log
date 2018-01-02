@@ -1,0 +1,12 @@
+2018/01/02 14:18:05 INFO  - jmeter.save.SaveService: Testplan (JMX) version: 2.2. Testlog (JTL) version: 2.2 
+2018/01/02 14:18:05 INFO  - jmeter.save.SaveService: Using SaveService properties file encoding UTF-8 
+2018/01/02 14:18:05 INFO  - jmeter.save.SaveService: Using SaveService properties version 3.1 
+2018/01/02 14:18:05 INFO  - jmeter.save.SaveService: All converter versions present and correct 
+2018/01/02 14:18:05 INFO  - jmeter.save.SaveService: Loading file: C:\ownCloud\MyData\ContinuITy\Papers\201804-ICPE-LTB-Vision\test-plans\testplan-1.jmx 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.control.CookieManager: Settings: Delete null: true Check: true Allow variable: true Save: false Prefix: COOKIE_ 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser 
+2018/01/02 14:18:05 INFO  - jmeter.protocol.http.sampler.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser 
