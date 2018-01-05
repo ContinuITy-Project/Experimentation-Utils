@@ -3,7 +3,6 @@ package org.continuity.experimentation.action.inspectit;
 import java.util.Date;
 
 import org.continuity.experimentation.action.AbstractRestAction;
-import org.continuity.experimentation.action.RandomSelection;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ public class StopRecording extends AbstractRestAction {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RandomSelection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StopRecording.class);
 
 	/**
 	 * Stop time data holder.

@@ -122,8 +122,8 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 		
 		if (startTimeDataHolder.isSet() && stopTimeDataHolder.isSet()) {
 			Date startTime = (Date) startTimeDataHolder.get();
-			Date stopTime = (Date) startTimeDataHolder.get();
-			String pattern = "yyyy/mm/dd/hh:mm:ss";
+			Date stopTime = (Date) stopTimeDataHolder.get();
+			String pattern = "yyyy/MM/dd/HH:mm:ss";
 			SimpleDateFormat format = new SimpleDateFormat(pattern);
 			String startTimeString = format.format(startTime);
 			String stopTimeString = format.format(stopTime);

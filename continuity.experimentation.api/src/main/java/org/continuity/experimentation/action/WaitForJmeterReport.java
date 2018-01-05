@@ -5,8 +5,20 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
+import org.continuity.experimentation.action.continuity.JMeterTestPlanExecution.TestPlanBundle;
+import org.continuity.experimentation.data.IDataHolder;
 
 public class WaitForJmeterReport extends AbstractRestAction {
+
+	/**
+	 * reference loadtest report path
+	 */
+	private static final String REFERENCE_LOADTEST_REPORT_PATH = "/referenceLoadtest/";
+
+	/**
+	 * generated loadtest report path
+	 */
+	private static final String GENERATED_LOADTEST_REPORT_PATH = "/generatedLoadtest/";
 
 	/**
 	 * The maximum number of attempts to retrieve the report.
@@ -29,6 +41,11 @@ public class WaitForJmeterReport extends AbstractRestAction {
 	private boolean generatedLoadtest;
 
 	/**
+	 * Chosen loadTest
+	 */
+	private IDataHolder<TestPlanBundle> chosenLoadTest;
+
+	/**
 	 * Constructor.
 	 * 
 	 * @param reportDestination
@@ -39,32 +56,39 @@ public class WaitForJmeterReport extends AbstractRestAction {
 	 *            The port of the continuITy frontend.
 	 * @param reportDestination
 	 *            the report destination.
+	 * @param chosenLoadTest
+	 *            the chosen load test
 	 */
-	public WaitForJmeterReport(String host, String port, String reportDestination, boolean generatedLoadtest) {
+	public WaitForJmeterReport(String host, String port, String reportDestination, boolean generatedLoadtest, IDataHolder<TestPlanBundle> chosenLoadTest) {
 		super(host, port);
 		this.reportDestination = reportDestination;
 		this.generatedLoadtest = generatedLoadtest;
+		this.chosenLoadTest = chosenLoadTest;
 	}
 
 	@Override
 	public void execute() {
-		String report = "";
+		String report = null;
 		for (int i = 0; i < MAX_ATTEMPTS; i++) {
 			report = get("/loadtest/report?timeout=20000", String.class);
-			if (!report.isEmpty()) {
+			if (report != null) {
 				break;
 			}
 		}
-		if (!report.isEmpty()) {
+		if (report != null) {
 			try {
 				File file = new File(reportDestination);
 				File manipulatedFile = null;
 				if(generatedLoadtest) {
-					manipulatedFile = new File("run#" + runCount + "/generatedLoadtest/" + file.getName());
+					manipulatedFile = new File("run#" + runCount + GENERATED_LOADTEST_REPORT_PATH + file.getName());
+					runCount++;
 				} else {
-					manipulatedFile = new File("run#" + runCount + "/referenceLoadtest/" + file.getName());
+					manipulatedFile = new File("run#" + runCount + REFERENCE_LOADTEST_REPORT_PATH + file.getName());
 				}
 				FileUtils.writeStringToFile(manipulatedFile, report, Charset.defaultCharset());
+
+				// Copy loadTest config to the corresponding run.
+				FileUtils.copyFile(chosenLoadTest.get().getFile(), new File(manipulatedFile.getParent() + "/" + chosenLoadTest.get().getFile().getName()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

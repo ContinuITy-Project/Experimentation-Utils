@@ -77,6 +77,8 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 		@JsonProperty("test-plan")
 		private String testPlan;
 
+		private File file;
+
 		private Map<String, String[][]> behaviors;
 
 		/**
@@ -117,6 +119,26 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 			this.behaviors = behaviors;
 		}
 
+		public TestPlanBundle(File file) {
+			this.file = file;
+			readFromJSON(file);
+		}
+
+		/**
+		 * Gets file
+		 * 
+		 * @return file
+		 */
+		public File getFile() {
+			return file;
+		}
+
+		/**
+		 * Reads TestPlan from JSON
+		 * 
+		 * @param file
+		 *            JSON file
+		 */
 		public void readFromJSON(File file) {
 			try {
 				String json = FileUtils.readFileToString(file, Charset.defaultCharset());

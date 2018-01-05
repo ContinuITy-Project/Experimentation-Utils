@@ -2,6 +2,7 @@ package continuity.experimentation.action.continuity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +37,10 @@ public class WorkloadModelGenerationTest {
 	@Before
 	public void setup() {
 		restMock = Mockito.mock(RestTemplate.class);
-		workingGenerator = new WorkloadModelGeneration(restMock, "localhost", "8080", "ok", "WorkloadModelGenerationTest", input, output);
-		errorGenerator = new WorkloadModelGeneration(restMock, "localhost", "8080", "error", "WorkloadModelGenerationTest", input, output);
+		workingGenerator = new WorkloadModelGeneration(restMock, "localhost", "8080", "ok", "WorkloadModelGenerationTest", input, new SimpleDataHolder<>("startTime", new Date()),
+				new SimpleDataHolder<>("startTime", new Date()), output);
+		errorGenerator = new WorkloadModelGeneration(restMock, "localhost", "8080", "error", "WorkloadModelGenerationTest", input, new SimpleDataHolder<>("startTime", new Date()),
+				new SimpleDataHolder<>("startTime", new Date()), output);
 
 		Map<String, String> returnMap = new HashMap<>();
 		returnMap.put("message", RETURN_MESSAGE);

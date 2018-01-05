@@ -21,7 +21,6 @@ import org.continuity.experimentation.action.inspectit.StopRecording;
 import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.IDataHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
-import org.continuity.experimentation.data.SimpleListHolder;
 
 /**
  * @author Henning Schulz
@@ -38,7 +37,10 @@ public class Main {
 		// Data holders
 
 		IDataHolder<TestPlanBundle> chosenLoadTest = new SimpleDataHolder<TestPlanBundle>("chosen loadtest", TestPlanBundle.class);
-		SimpleListHolder<String> loadTestList = new SimpleListHolder<String>("loadtest list");
+
+		// Set list of available TestPlanBundles
+		TestPlanBundle dummyTest = new TestPlanBundle(new File("testplan-4.json"));
+		IDataHolder<List<TestPlanBundle>> loadTestList = new SimpleDataHolder<>("loadtest list", new ArrayList<TestPlanBundle>(Arrays.asList(new TestPlanBundle[] { dummyTest })));
 
 		IDataHolder<Date> startTimeDataHolder = new SimpleDataHolder<Date>("start time data", Date.class);
 		IDataHolder<Date> stopTimeDataHolder = new SimpleDataHolder<Date>("stop time data", Date.class);
@@ -49,17 +51,15 @@ public class Main {
 		IDataHolder<String> tagHolder = new SimpleDataHolder<>("tag", String.class);
 
 		List<IDataHolder<?>> dataHolders = new ArrayList<>(Arrays.asList(new IDataHolder[] { chosenLoadTest, loadTestList, startTimeDataHolder, stopTimeDataHolder, dataLink, workloadLink, tagHolder }));
-		TestPlanBundle testPlanBundle = new TestPlanBundle();
-		testPlanBundle.readFromJSON(new File("jmeter-dvdstore.json"));
+
 		tagHolder.set("dvdstore");
-		dataLink.set("http://letslx037:8182/rest/open-xtrace/get");
+		dataLink.set("http://172.16.145.68:8182/rest/open-xtrace/get");
 
-
-		loadTestList.set(new ArrayList<TestPlanBundle>(Arrays.asList(new TestPlanBundle[] { testPlanBundle })));
+		loadTestList.set(new ArrayList<TestPlanBundle>(Arrays.asList(new TestPlanBundle[] { dummyTest })));
 
 		ExperimentSummarySaving saveSummary = null;
 
-		RandomSelection<TestPlanBundle> randomJmeterTestSelection = new RandomSelection<TestPlanBundle>(loadTestList, chosenLoadTest);
+		RandomSelection<TestPlanBundle> randomJmeterTestSelection = new RandomSelection<TestPlanBundle>(loadTestList, chosenLoadTest, true);
 
 		JMeterTestPlanExecution testPlanExecution = new JMeterTestPlanExecution("letslx037", chosenLoadTest);
 
@@ -69,16 +69,10 @@ public class Main {
 
 		WorkloadTransformationAndExecution workloadTransformationAndExecution = new WorkloadTransformationAndExecution("letslx037", "8080", "jmeter", tagHolder, workloadLink, 75, 720l, 40);
 
-		experiment = builder.newExperiment("ICPE 18 LTB").loop(20).append(randomJmeterTestSelection).append(new StartNewRecording(startTimeDataHolder, false))
-			.append(testPlanExecution)
-				.append(new WaitForJmeterReport("letslx037", "8080", "jmeter-report.txt", false)).append(stopRecording)
-			.append(workloadModelGeneration)
-			.append(new RestartDVDStore())
-			.append(workloadTransformationAndExecution)
-			.append(new StartNewRecording(startTimeDataHolder, true))
-				.append(new WaitForJmeterReport("letslx037", "8080", "jmeter-report.txt", true))
-			.append(stopRecording)
-			.append(new DataInvalidation(dataHolders)).end().end().build();
+		experiment = builder.newExperiment("ICPE 18 LTB").loop(20).append(new RestartDVDStore()).append(randomJmeterTestSelection).append(new StartNewRecording(startTimeDataHolder, false)).append(testPlanExecution)
+				.append(new WaitForJmeterReport("letslx037", "8080", "jmeter-report.txt", false, chosenLoadTest)).append(stopRecording).append(workloadModelGeneration).append(new RestartDVDStore())
+				.append(workloadTransformationAndExecution).append(new StartNewRecording(startTimeDataHolder, true)).append(new WaitForJmeterReport("letslx037", "8080", "jmeter-report.txt", true, chosenLoadTest))
+				.append(stopRecording).append(new DataInvalidation(dataHolders)).end().end().build();
 
 		saveSummary = new ExperimentSummarySaving(new File("").toPath(), experiment);
 

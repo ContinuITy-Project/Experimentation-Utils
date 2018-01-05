@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.continuity.experimentation.action.AbstractRestAction;
-import org.continuity.experimentation.action.RandomSelection;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ public class StartNewRecording extends AbstractRestAction {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RandomSelection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StartNewRecording.class);
 
 	/**
 	 * storage name.
@@ -87,7 +86,7 @@ public class StartNewRecording extends AbstractRestAction {
 	@Override
 	public void execute() {
 		Date currentDate = new Date();
-		String pattern = "yyyy-mm-dd-hh-mm-ss";
+		String pattern = "yyyy-MM-dd-HH-mm-ss";
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
 		if (!storageNameSet) {
 			if (generatedLoadtest) {
