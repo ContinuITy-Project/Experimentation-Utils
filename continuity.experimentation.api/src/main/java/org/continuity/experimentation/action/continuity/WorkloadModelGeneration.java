@@ -115,14 +115,14 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 	 */
 	@Override
 	public void execute() {
-		
+
 		String dataLinkString;
 		JsonNodeFactory factory = new JsonNodeFactory(false);
 		ObjectNode node = factory.objectNode();
-		
+
 		if (startTimeDataHolder.isSet() && stopTimeDataHolder.isSet()) {
-			Date startTime = (Date) startTimeDataHolder.get();
-			Date stopTime = (Date) stopTimeDataHolder.get();
+			Date startTime = startTimeDataHolder.get();
+			Date stopTime = stopTimeDataHolder.get();
 			String pattern = "yyyy/MM/dd/HH:mm:ss";
 			SimpleDateFormat format = new SimpleDateFormat(pattern);
 			String startTimeString = format.format(startTime);
@@ -146,7 +146,25 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 		if (link == null) {
 			LOGGER.error("The response did not contain a link! Message from server: '{}'", message);
 		} else {
-			LOGGER.info("Workload model creation initiated. Message from server is '{}' and link is '{}'", message, link);
+			LOGGER.info("Workload model creation initiated. Message from server is '{}' and link is '{}'. Waiting for creation finished...", message, link);
+
+			boolean finished = false;
+			long timeout = 10000;
+			int loopCounter = 0;
+			while (!finished) {
+				if (loopCounter > 360) {
+					LOGGER.error("Waiting for more than one hour for the workload model to be finished. Aborting!");
+					break;
+				}
+
+				Map<?, ?> waitResponse = get("/workloadmodel/wait/" + link + "?timeout=" + timeout, Map.class);
+
+				if ((waitResponse != null) && !waitResponse.isEmpty()) {
+					finished = true;
+				}
+
+				loopCounter++;
+			}
 		}
 
 		workloadLink.set(link);
