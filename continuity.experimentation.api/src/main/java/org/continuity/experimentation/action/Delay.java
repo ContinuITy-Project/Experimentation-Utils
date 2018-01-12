@@ -1,5 +1,6 @@
 package org.continuity.experimentation.action;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ public class Delay implements IExperimentAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		LOGGER.info("Going to sleep for {} ms...", delayMillis);
 		long start = System.currentTimeMillis();
 

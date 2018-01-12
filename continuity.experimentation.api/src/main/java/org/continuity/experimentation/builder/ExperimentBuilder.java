@@ -1,7 +1,7 @@
 package org.continuity.experimentation.builder;
 
 import org.continuity.experimentation.Experiment;
-import org.continuity.experimentation.element.IExperimentElement;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * A builder for {@link Experiment}s.

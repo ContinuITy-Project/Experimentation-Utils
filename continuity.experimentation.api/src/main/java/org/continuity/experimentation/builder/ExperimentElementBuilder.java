@@ -1,8 +1,8 @@
 package org.continuity.experimentation.builder;
 
 import org.continuity.experimentation.IExperimentAction;
+import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.ExperimentActionElement;
-import org.continuity.experimentation.element.IExperimentElement;
 
 /**
  * Builder for single {@link IExperimentElement}s.

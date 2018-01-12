@@ -12,7 +12,9 @@ public interface IExperimentAction {
 	/**
 	 * Executes the experiment action.
 	 *
+	 * @param context
+	 *            The current context.
 	 */
-	void execute();
+	void execute(Context context);
 
 }

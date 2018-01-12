@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class RandomSelection<T> implements IExperimentAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		List<T> selection;
 
 		if (!avoidTwiceInARow) {

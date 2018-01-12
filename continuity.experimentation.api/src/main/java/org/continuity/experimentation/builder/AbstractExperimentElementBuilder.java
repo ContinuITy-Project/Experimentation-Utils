@@ -3,7 +3,7 @@ package org.continuity.experimentation.builder;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.continuity.experimentation.element.IExperimentElement;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * Common base for experiment builders.

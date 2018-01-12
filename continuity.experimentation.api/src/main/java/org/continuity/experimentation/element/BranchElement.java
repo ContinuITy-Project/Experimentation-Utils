@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 import org.apache.commons.math3.util.Pair;
+import org.continuity.experimentation.Context;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * Represents an if-else branch in the experiment chain.
@@ -35,6 +37,13 @@ public class BranchElement implements IExperimentElement {
 	@Override
 	public boolean hasAction() {
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateContext(Context context) {
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package org.continuity.experimentation.builder;
 
+import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.ConcurrentElement;
-import org.continuity.experimentation.element.IExperimentElement;
 
 /**
  * @author Henning Schulz
@@ -42,7 +42,6 @@ public class ConcurrentBuilder<C extends IExperimentBuilder> extends AbstractExp
 	protected void onReturn(IExperimentElement result, IExperimentElement last) {
 		if (result != null) {
 			concurrentElement.addThread(result);
-			last.setNextOrFail(concurrentElement.getJoin());
 		}
 	}
 

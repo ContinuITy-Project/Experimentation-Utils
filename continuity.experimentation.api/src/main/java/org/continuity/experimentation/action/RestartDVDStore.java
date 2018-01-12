@@ -1,5 +1,7 @@
 package org.continuity.experimentation.action;
 
+import org.continuity.experimentation.Context;
+
 /**
  * Restarts the DVDstore.
  *
@@ -15,7 +17,7 @@ public class RestartDVDStore extends AbstractRestAction {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		get("/restart/dvdstore", String.class);
 	}
 

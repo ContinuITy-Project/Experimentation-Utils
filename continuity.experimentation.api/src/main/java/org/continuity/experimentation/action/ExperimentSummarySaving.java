@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.IExperimentAction;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ public class ExperimentSummarySaving implements IExperimentAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HH30");
 		String filename = dateFormat.format(new Date()) + "-summary.txt";
 		try {

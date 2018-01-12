@@ -1,5 +1,8 @@
 package org.continuity.experimentation.element;
 
+import org.continuity.experimentation.Context;
+import org.continuity.experimentation.IExperimentElement;
+
 /**
  * Can be used for joining branches, loops or forks.
  *
@@ -16,6 +19,13 @@ public class JoinElement implements IExperimentElement {
 	@Override
 	public boolean hasAction() {
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateContext(Context context) {
 	}
 
 	/**

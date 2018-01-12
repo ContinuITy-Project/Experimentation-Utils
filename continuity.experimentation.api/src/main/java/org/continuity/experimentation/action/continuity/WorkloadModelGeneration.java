@@ -3,6 +3,7 @@ package org.continuity.experimentation.action.continuity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
@@ -99,7 +100,7 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		Map<String, String> body = new HashMap<>();
 		body.put("data", dataLink.get());
 		body.put("tag", tag);

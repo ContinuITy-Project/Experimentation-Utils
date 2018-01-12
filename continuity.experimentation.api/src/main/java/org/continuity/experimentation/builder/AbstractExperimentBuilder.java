@@ -1,6 +1,6 @@
 package org.continuity.experimentation.builder;
 
-import org.continuity.experimentation.element.IExperimentElement;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * @author Henning Schulz

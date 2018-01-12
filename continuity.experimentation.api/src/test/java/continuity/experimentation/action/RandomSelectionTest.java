@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.RandomSelection;
 import org.continuity.experimentation.data.IDataHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
@@ -24,12 +25,16 @@ public class RandomSelectionTest {
 	private IDataHolder<List<String>> inputHolder;
 	private IDataHolder<String> outputHolder;
 
+	private Context context;
+
 	@Before
 	public void setup() {
 		List<String> inputList = Arrays.asList("first", "second", "third", "fourth");
 		inputHolder = new SimpleDataHolder<>("input", inputList);
 
 		outputHolder = new SimpleDataHolder<>("output", String.class);
+
+		context = new Context();
 	}
 
 	@Test
@@ -39,7 +44,7 @@ public class RandomSelectionTest {
 		Set<String> selected = new HashSet<>();
 
 		for (int i = 0; i < 100; i++) {
-			selection.execute();
+			selection.execute(context);
 			assertThat(outputHolder.get()).isIn(inputHolder.get());
 
 			selected.add(outputHolder.get());
@@ -56,7 +61,7 @@ public class RandomSelectionTest {
 		String last = null;
 
 		for (int i = 0; i < 100; i++) {
-			selection.execute();
+			selection.execute(context);
 			assertThat(outputHolder.get()).isIn(inputHolder.get());
 
 			if (first) {
@@ -75,7 +80,7 @@ public class RandomSelectionTest {
 		selection = new RandomSelection<>(inputHolder, outputHolder, true);
 
 		for (int i = 0; i < 100; i++) {
-			selection.execute();
+			selection.execute(context);
 			assertThat(outputHolder.get()).isEqualTo("first");
 		}
 	}

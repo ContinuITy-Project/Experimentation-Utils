@@ -1,6 +1,4 @@
-package org.continuity.experimentation.element;
-
-import org.continuity.experimentation.IExperimentAction;
+package org.continuity.experimentation;
 
 /**
  * Common interface for experiment elements.
@@ -55,7 +53,20 @@ public interface IExperimentElement {
 		public String toString() {
 			return "END";
 		}
+
+		@Override
+		public void updateContext(Context context) {
+		}
 	};
+
+	/**
+	 * Appends a new element to the current context. Will be executed immediately before the held
+	 * action is retrieved or the next element is visited.
+	 *
+	 * @param context
+	 *            The current context.
+	 */
+	void updateContext(Context context);
 
 	/**
 	 * Returns whether the element holds an action that is to be executed.

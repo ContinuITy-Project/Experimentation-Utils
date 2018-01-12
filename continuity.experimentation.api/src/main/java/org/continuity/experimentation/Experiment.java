@@ -1,7 +1,5 @@
 package org.continuity.experimentation;
 
-import org.continuity.experimentation.element.IExperimentElement;
-
 /**
  * An Experiment holds a name and the first {@link IExperimentElement} to be executed. Each element
  * can, but need not, hold an {@link IExperimentAction}.
@@ -16,7 +14,7 @@ public class Experiment {
 	private IExperimentElement first;
 
 	public Experiment() {
-		this("<unknown>");
+		this("experiment");
 	}
 
 	public Experiment(String name) {
@@ -28,15 +26,33 @@ public class Experiment {
 	 *
 	 */
 	public void execute() {
+		execute(new Context());
+	}
+
+	/**
+	 * Executes the experiment in an initial context.
+	 *
+	 * @param context
+	 *            The initial context.
+	 */
+	public void execute(Context context) {
+		context.append(name);
+
 		IExperimentElement current = first;
 
 		while ((current != null) && !current.isEnd()) {
+			current.updateContext(context);
+
+			context.toPath().toFile().mkdirs();
+
 			if (current.hasAction()) {
-				current.getAction().execute();
+				current.getAction().execute(context);
 			}
 
 			current = current.getNext();
 		}
+
+		context.remove(name);
 	}
 
 	/**

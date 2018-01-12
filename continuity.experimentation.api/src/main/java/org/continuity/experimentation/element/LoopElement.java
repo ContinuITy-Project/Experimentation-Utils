@@ -1,5 +1,8 @@
 package org.continuity.experimentation.element;
 
+import org.continuity.experimentation.Context;
+import org.continuity.experimentation.IExperimentElement;
+
 /**
  * Loop in the experiment chain.
  *
@@ -8,13 +11,15 @@ package org.continuity.experimentation.element;
  */
 public class LoopElement implements IExperimentElement {
 
+	private static final String PREFIX_CONTEXT = "iteration#";
+
 	private IExperimentElement loopStart;
 
 	private IExperimentElement afterLoop;
 
 	private final int numIterations;
 
-	private int currentIteration = 0;
+	private int currentIteration = 1;
 
 	boolean counting = false;
 
@@ -22,6 +27,20 @@ public class LoopElement implements IExperimentElement {
 
 	public LoopElement(int numIterations) {
 		this.numIterations = numIterations;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateContext(Context context) {
+		if (currentIteration > 1) {
+			context.remove(PREFIX_CONTEXT + (currentIteration - 1));
+		}
+
+		if (currentIteration <= numIterations) {
+			context.append(PREFIX_CONTEXT + currentIteration);
+		}
 	}
 
 	/**
@@ -37,9 +56,9 @@ public class LoopElement implements IExperimentElement {
 	 */
 	@Override
 	public IExperimentElement getNext() {
-		currentIteration++;
+		int it = currentIteration++;
 
-		if (currentIteration <= numIterations) {
+		if (it <= numIterations) {
 			return loopStart;
 		} else {
 			return afterLoop;

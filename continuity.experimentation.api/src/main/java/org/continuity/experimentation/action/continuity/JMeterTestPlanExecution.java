@@ -2,6 +2,7 @@ package org.continuity.experimentation.action.continuity;
 
 import java.util.Map;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		String response = post("loadtest/jmeter/execute", String.class, testPlanBundle.get());
 		LOGGER.info("Response from frontend: {}", response);
 	}

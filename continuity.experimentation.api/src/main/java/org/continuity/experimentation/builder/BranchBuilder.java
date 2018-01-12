@@ -2,8 +2,8 @@ package org.continuity.experimentation.builder;
 
 import java.util.function.BooleanSupplier;
 
+import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.BranchElement;
-import org.continuity.experimentation.element.IExperimentElement;
 
 /**
  * Builder for adding branches.

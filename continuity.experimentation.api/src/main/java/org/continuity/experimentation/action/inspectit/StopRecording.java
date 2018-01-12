@@ -1,5 +1,6 @@
 package org.continuity.experimentation.action.inspectit;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.action.RandomSelection;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class StopRecording extends AbstractRestAction {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		get("/rest/storage/stop", String.class);
 
 		LOGGER.info("Recording stopped");

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.continuity.WorkloadModelGeneration;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.junit.Before;
@@ -32,6 +33,8 @@ public class WorkloadModelGenerationTest {
 	private SimpleDataHolder<String> input = new SimpleDataHolder<>("dataLink", "foo");
 	private SimpleDataHolder<String> output = new SimpleDataHolder<>("workloadLink", String.class);
 
+	private Context context;
+
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setup() {
@@ -47,18 +50,20 @@ public class WorkloadModelGenerationTest {
 
 		Mockito.when(restMock.postForEntity(ArgumentMatchers.eq("http://localhost:8080/workloadmodel/error/create"), ArgumentMatchers.any(), ArgumentMatchers.any(Class.class)))
 		.thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+
+		context = new Context();
 	}
 
 	@Test
 	public void testWorking() {
-		workingGenerator.execute();
+		workingGenerator.execute(context);
 
 		assertThat(output.get()).isEqualTo(RETURN_LINK);
 	}
 
 	@Test(expected = RuntimeException.class)
 	public void testError() {
-		errorGenerator.execute();
+		errorGenerator.execute(context);
 	}
 
 }

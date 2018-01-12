@@ -1,5 +1,6 @@
 package continuity.experimentation.action;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.data.IDataHolder;
 
@@ -27,7 +28,7 @@ public class DummyExperimentAction implements IExperimentAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		System.out.println("Input: " + (inputHolder.isSet() ? inputHolder.get() : "not set"));
 		outputHolder.set(message);
 	}

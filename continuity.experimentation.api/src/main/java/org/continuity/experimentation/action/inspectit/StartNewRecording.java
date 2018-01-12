@@ -2,6 +2,7 @@ package org.continuity.experimentation.action.inspectit;
 
 import java.io.IOException;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.action.RandomSelection;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class StartNewRecording extends AbstractRestAction {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		// Create new storage
 		String creationResponse = get("/rest/storage/" + storageName + "/create", String.class);
 

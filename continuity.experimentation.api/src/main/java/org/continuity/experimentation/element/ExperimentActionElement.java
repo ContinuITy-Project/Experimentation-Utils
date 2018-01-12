@@ -1,6 +1,8 @@
 package org.continuity.experimentation.element;
 
+import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * Element holding an action.
@@ -105,6 +107,14 @@ public class ExperimentActionElement implements IExperimentElement {
 	@Override
 	public String toString() {
 		return toString("");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateContext(Context context) {
+		// do nothing
 	}
 
 }

@@ -20,6 +20,7 @@ public class ConcurrentActionTest {
 	private SimpleDataHolder<String> str1 = new SimpleDataHolder<>("str1", "Hi, how are you?");
 	private SimpleDataHolder<String> str2 = new SimpleDataHolder<>("str2", String.class);
 	private SimpleDataHolder<String> str3 = new SimpleDataHolder<>("str3", String.class);
+	private SimpleDataHolder<String> str4 = new SimpleDataHolder<>("str4", String.class);
 
 	private AppendingStringHolder counter = new AppendingStringHolder("counter");
 
@@ -29,7 +30,7 @@ public class ConcurrentActionTest {
 
 		DummyExperimentAction step1 = new DummyExperimentAction(str1, str2, "Hello");
 		DummyExperimentAction step2 = new DummyExperimentAction(str2, str3, "I'm fine.");
-		DummyExperimentAction step3 = new DummyExperimentAction(str2, str3, "I'm not feeling good.");
+		DummyExperimentAction step3 = new DummyExperimentAction(str2, str4, "I'm not feeling good.");
 
 		DummyExperimentAction countStep = new DummyExperimentAction(counter, counter, "|");
 

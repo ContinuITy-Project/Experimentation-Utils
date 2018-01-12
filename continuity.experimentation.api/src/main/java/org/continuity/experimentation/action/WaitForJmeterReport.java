@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
+import org.continuity.experimentation.Context;
 
 public class WaitForJmeterReport extends AbstractRestAction {
 
@@ -20,7 +21,7 @@ public class WaitForJmeterReport extends AbstractRestAction {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param reportDestination
 	 *            the destination, where the report should be stored (including the filename).
 	 * @param host
@@ -36,7 +37,7 @@ public class WaitForJmeterReport extends AbstractRestAction {
 	}
 
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		String report = "";
 		for (int i = 0; i < MAX_ATTEMPTS; i++) {
 			report = get("/loadtest/report?timeout=20000", String.class);

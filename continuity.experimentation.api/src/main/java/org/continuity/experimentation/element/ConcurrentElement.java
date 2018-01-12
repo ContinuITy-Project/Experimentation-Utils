@@ -6,7 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.continuity.experimentation.Context;
+import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.IExperimentAction;
+import org.continuity.experimentation.IExperimentElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +64,15 @@ public class ConcurrentElement implements IExperimentElement {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void updateContext(Context context) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public IExperimentElement getNext() {
-		return join.getNext();
+		return join;
 	}
 
 	/**
@@ -129,6 +139,8 @@ public class ConcurrentElement implements IExperimentElement {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(ThreadedAction.class);
 
+		private static final String PREFIX_PARALLEL = "thread#";
+
 		private final List<IExperimentElement> threads;
 
 		private final ExecutorService executorService;
@@ -142,8 +154,14 @@ public class ConcurrentElement implements IExperimentElement {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void execute() {
-			threads.forEach(this::executeThread);
+		public void execute(Context context) {
+			int i = 1;
+
+			for (IExperimentElement thread : threads) {
+				executeThread(thread, context, i);
+				i++;
+			}
+
 			executorService.shutdown();
 
 			try {
@@ -154,17 +172,11 @@ public class ConcurrentElement implements IExperimentElement {
 			}
 		}
 
-		private void executeThread(IExperimentElement first) {
+		private void executeThread(IExperimentElement first, Context context, int number) {
 			executorService.execute(() -> {
-				IExperimentElement current = first;
-
-				while ((current != null) && !current.isEnd()) {
-					if (current.hasAction()) {
-						current.getAction().execute();
-					}
-
-					current = current.getNext();
-				}
+				Experiment exp = new Experiment(PREFIX_PARALLEL + number);
+				exp.setFirst(first);
+				exp.execute(context.clone());
 			});
 		}
 
