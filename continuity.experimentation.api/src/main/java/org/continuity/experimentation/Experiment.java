@@ -1,5 +1,7 @@
 package org.continuity.experimentation;
 
+import org.continuity.experimentation.exception.AbortException;
+
 /**
  * An Experiment holds a name and the first {@link IExperimentElement} to be executed. Each element
  * can, but need not, hold an {@link IExperimentAction}.
@@ -7,62 +9,29 @@ package org.continuity.experimentation;
  * @author Henning Schulz
  *
  */
-public class Experiment {
+public class Experiment extends AbstractExperimentExecutor {
 
 	private final String name;
 
-	private IExperimentElement first;
-
-	public Experiment() {
-		this("experiment");
+	public Experiment(IExperimentElement first) {
+		this("experiment", first);
 	}
 
-	public Experiment(String name) {
+	public Experiment(String name, IExperimentElement first) {
+		super(first);
 		this.name = name;
 	}
 
 	/**
-	 * Executes the experiment.
-	 *
+	 * {@inheritDoc}
 	 */
-	public void execute() {
-		execute(new Context());
-	}
-
-	/**
-	 * Executes the experiment in an initial context.
-	 *
-	 * @param context
-	 *            The initial context.
-	 */
-	public void execute(Context context) {
+	@Override
+	public void execute(Context context) throws AbortException {
 		context.append(name);
 
-		IExperimentElement current = first;
-
-		while ((current != null) && !current.isEnd()) {
-			current.updateContext(context);
-
-			context.toPath().toFile().mkdirs();
-
-			if (current.hasAction()) {
-				current.getAction().execute(context);
-			}
-
-			current = current.getNext();
-		}
+		super.execute(context);
 
 		context.remove(name);
-	}
-
-	/**
-	 * Sets {@link #first}.
-	 *
-	 * @param first
-	 *            New value for {@link #first}
-	 */
-	public void setFirst(IExperimentElement first) {
-		this.first = first;
 	}
 
 	/**
@@ -71,7 +40,7 @@ public class Experiment {
 	 * @return The number of actions.
 	 */
 	public double getNumberOfActions() {
-		return first.count();
+		return getFirst().count();
 	}
 
 	/**
@@ -79,7 +48,7 @@ public class Experiment {
 	 */
 	@Override
 	public String toString() {
-		return "Experiment \"" + name + "\" (" + getNumberOfActions() + " steps):\n" + first.toString();
+		return "Experiment \"" + name + "\" (" + getNumberOfActions() + " steps):\n" + getFirst().toString();
 	}
 
 }

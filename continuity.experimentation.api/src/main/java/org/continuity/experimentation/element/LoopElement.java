@@ -2,6 +2,9 @@ package org.continuity.experimentation.element;
 
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.exception.AbortInnerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Loop in the experiment chain.
@@ -10,6 +13,8 @@ import org.continuity.experimentation.IExperimentElement;
  *
  */
 public class LoopElement implements IExperimentElement {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoopElement.class);
 
 	private static final String PREFIX_CONTEXT = "iteration#";
 
@@ -39,7 +44,7 @@ public class LoopElement implements IExperimentElement {
 		}
 
 		if (currentIteration <= numIterations) {
-			context.append(PREFIX_CONTEXT + currentIteration);
+			context.append(this, PREFIX_CONTEXT + currentIteration);
 		}
 	}
 
@@ -139,6 +144,15 @@ public class LoopElement implements IExperimentElement {
 
 
 		return builder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IExperimentElement handleAborted(AbortInnerException exception) {
+		LOGGER.info("Handling a {} and continuing with the next iteration.", exception.getClass().getSimpleName());
+		return this;
 	}
 
 }

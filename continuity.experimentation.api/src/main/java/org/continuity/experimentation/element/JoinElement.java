@@ -2,6 +2,7 @@ package org.continuity.experimentation.element;
 
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.exception.AbortInnerException;
 
 /**
  * Can be used for joining branches, loops or forks.
@@ -80,6 +81,14 @@ public class JoinElement implements IExperimentElement {
 	@Override
 	public String toString(String newLinePrefix) {
 		return "JOIN";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IExperimentElement handleAborted(AbortInnerException exception) {
+		return null;
 	}
 
 }

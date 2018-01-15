@@ -2,14 +2,19 @@ package org.continuity.experimentation.element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
+import org.continuity.experimentation.AbstractExperimentExecutor;
 import org.continuity.experimentation.Context;
-import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.exception.AbortException;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +25,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ConcurrentElement implements IExperimentElement {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrentElement.class);
 
 	private final JoinElement join = new JoinElement();
 
@@ -57,7 +64,7 @@ public class ConcurrentElement implements IExperimentElement {
 	 */
 	@Override
 	public IExperimentAction getAction() {
-		return new ThreadedAction(threads);
+		return new ThreadedAction(threads, this);
 	}
 
 	/**
@@ -139,28 +146,28 @@ public class ConcurrentElement implements IExperimentElement {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(ThreadedAction.class);
 
-		private static final String PREFIX_PARALLEL = "thread#";
-
 		private final List<IExperimentElement> threads;
 
 		private final ExecutorService executorService;
 
-		private ThreadedAction(List<IExperimentElement> threads) {
+		private final ConcurrentElement outer;
+
+		private ThreadedAction(List<IExperimentElement> threads, ConcurrentElement outer) {
 			this.threads = threads;
 			this.executorService = Executors.newFixedThreadPool(threads.size());
+			this.outer = outer;
 		}
 
 		/**
 		 * {@inheritDoc}
+		 *
 		 */
 		@Override
-		public void execute(Context context) {
-			int i = 1;
+		public void execute(Context context) throws AbortException {
+			final AtomicInteger counter = new AtomicInteger(1);
 
-			for (IExperimentElement thread : threads) {
-				executeThread(thread, context, i);
-				i++;
-			}
+			List<AbortException> thrownExceptions = threads.stream().map(t -> new ThreadExecutor(outer, t, context, counter.getAndIncrement())).map(ThreadExecutor::executeCatchedWithContext)
+					.filter(Objects::nonNull).collect(Collectors.toList());
 
 			executorService.shutdown();
 
@@ -170,16 +177,58 @@ public class ConcurrentElement implements IExperimentElement {
 				LOGGER.warn("Thread was interrupted during waiting for the concurrent actions to finish!");
 				e.printStackTrace();
 			}
+
+			if (thrownExceptions.size() == 1) {
+				throw thrownExceptions.get(0);
+			} else if (!thrownExceptions.isEmpty()) {
+				throw new AbortException(context, thrownExceptions.size() + " exceptions", thrownExceptions.get(0));
+			}
 		}
 
-		private void executeThread(IExperimentElement first, Context context, int number) {
-			executorService.execute(() -> {
-				Experiment exp = new Experiment(PREFIX_PARALLEL + number);
-				exp.setFirst(first);
-				exp.execute(context.clone());
-			});
+	}
+
+	private static class ThreadExecutor extends AbstractExperimentExecutor {
+
+		private static final Logger LOGGER = LoggerFactory.getLogger(ThreadExecutor.class);
+
+		private static final String PREFIX_THREAD = "thread#";
+
+		private final Context context;
+		private final int number;
+		private final ConcurrentElement outer;
+
+		protected ThreadExecutor(ConcurrentElement outer, IExperimentElement first, Context context, int number) {
+			super(first);
+			this.context = context.clone();
+			this.number = number;
+			this.outer = outer;
 		}
 
+		public AbortException executeCatchedWithContext() {
+			AbortException thrownException = null;
+			context.append(outer, PREFIX_THREAD + number);
+
+			try {
+				execute(context);
+			} catch (AbortException e) {
+				thrownException = e;
+				LOGGER.warn("An uncaught {} has been thrown! Passing it to the ConcurrentHandler.", e.getClass().getSimpleName());
+				e.printStackTrace();
+			}
+
+			context.remove(PREFIX_THREAD + number);
+			return thrownException;
+		}
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IExperimentElement handleAborted(AbortInnerException exception) {
+		LOGGER.info("Handling a {} by stopping the thread.", exception.getClass().getSimpleName());
+		return IExperimentElement.END;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.function.BooleanSupplier;
 import org.apache.commons.math3.util.Pair;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.exception.AbortInnerException;
 
 /**
  * Represents an if-else branch in the experiment chain.
@@ -175,6 +176,14 @@ public class BranchElement implements IExperimentElement {
 		}
 
 		return builder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IExperimentElement handleAborted(AbortInnerException exception) {
+		return null;
 	}
 
 }

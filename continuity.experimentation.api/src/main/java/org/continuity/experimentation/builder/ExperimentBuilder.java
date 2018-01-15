@@ -26,9 +26,7 @@ public class ExperimentBuilder extends AbstractExperimentBuilder {
 	 * @return The constructed experiment.
 	 */
 	public Experiment build() {
-		Experiment experiment = new Experiment(experimentName);
-		experiment.setFirst(elementBuilder.getResult());
-		return experiment;
+		return new Experiment(experimentName, elementBuilder.getResult());
 	}
 
 	/**

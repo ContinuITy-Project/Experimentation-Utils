@@ -3,6 +3,7 @@ package org.continuity.experimentation.element;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.exception.AbortInnerException;
 
 /**
  * Element holding an action.
@@ -115,6 +116,14 @@ public class ExperimentActionElement implements IExperimentElement {
 	@Override
 	public void updateContext(Context context) {
 		// do nothing
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IExperimentElement handleAborted(AbortInnerException exception) {
+		return null;
 	}
 
 }

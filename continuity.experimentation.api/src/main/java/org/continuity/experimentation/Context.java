@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Stack;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,22 +21,22 @@ public class Context implements Cloneable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Context.class);
 
-	private final Stack<String> contextStack;
+	private final Stack<Pair<IExperimentElement, String>> contextStack;
 
 	public Context() {
 		this.contextStack = new Stack<>();
 	}
 
-	protected Context(Stack<String> contextStack) {
+	protected Context(Stack<Pair<IExperimentElement, String>> contextStack) {
 		this.contextStack = contextStack;
 	}
 
 	/**
 	 * Gets {@link #contextStack}.
-	 * 
+	 *
 	 * @return {@link #contextStack}
 	 */
-	protected Stack<String> getContextStack() {
+	protected Stack<Pair<IExperimentElement, String>> getContextStack() {
 		return this.contextStack;
 	}
 
@@ -45,7 +47,19 @@ public class Context implements Cloneable {
 	 *            The context to be appended.
 	 */
 	public void append(String context) {
-		contextStack.push(context);
+		append(null, context);
+	}
+
+	/**
+	 * Appends a context.
+	 *
+	 * @param element
+	 *            The element corresponding to the context.
+	 * @param context
+	 *            The context to be appended.
+	 */
+	public void append(IExperimentElement element, String context) {
+		contextStack.push(new ImmutablePair<>(element, context));
 		LOGGER.info("Changed context to {}", toString());
 	}
 
@@ -57,12 +71,31 @@ public class Context implements Cloneable {
 	 *            The context to be removed.
 	 */
 	public void remove(String context) {
-		if (Objects.equals(contextStack.peek(), context)) {
+		if (Objects.equals(contextStack.peek().getRight(), context)) {
 			contextStack.pop();
 
 			LOGGER.info("Removed context {}. Context is now {}", context, toString());
 		} else {
 			throw new IllegalArgumentException("Cannot remove context " + context + "! Current context is " + toString());
+		}
+	}
+
+	/**
+	 * Discards all contexts above the upmost element. That is, if the context is
+	 * {@code (null, a)/(loop, b)/(null, c)}, the resulting context is {@code (null, a)/(loop, b)}
+	 * and {@code loop} will be returned.
+	 *
+	 * @return The upmost element or {@code null}, if there is no element.
+	 */
+	public IExperimentElement resetToUpmostElement() {
+		while ((contextStack.size() > 0) && (contextStack.peek().getLeft() == null)) {
+			contextStack.pop();
+		}
+
+		if (contextStack.size() > 0) {
+			return contextStack.peek().getLeft();
+		} else {
+			return null;
 		}
 	}
 
@@ -74,8 +107,8 @@ public class Context implements Cloneable {
 	public Path toPath() {
 		Path path = Paths.get("");
 
-		for (String element : contextStack) {
-			path = path.resolve(element);
+		for (Pair<IExperimentElement, String> element : contextStack) {
+			path = path.resolve(element.getRight());
 		}
 
 		return path;
@@ -90,14 +123,14 @@ public class Context implements Cloneable {
 
 		boolean first = true;
 
-		for (String element : contextStack) {
+		for (Pair<IExperimentElement, String> element : contextStack) {
 			if (first) {
 				first = false;
 			} else {
 				builder.append("/");
 			}
 
-			builder.append(element);
+			builder.append(element.getRight());
 		}
 
 		return builder.toString();
@@ -109,7 +142,7 @@ public class Context implements Cloneable {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Context clone() {
-		return new Context((Stack<String>) contextStack.clone());
+		return new Context((Stack<Pair<IExperimentElement, String>>) contextStack.clone());
 	}
 
 }

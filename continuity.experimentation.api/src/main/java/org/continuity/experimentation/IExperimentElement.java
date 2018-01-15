@@ -1,5 +1,9 @@
 package org.continuity.experimentation;
 
+import org.continuity.experimentation.exception.AbortInnerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Common interface for experiment elements.
  *
@@ -12,6 +16,8 @@ public interface IExperimentElement {
 	 * Marks the end of the experiment chain.
 	 */
 	public static final IExperimentElement END = new IExperimentElement() {
+
+		private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 		@Override
 		public void setNextOrFail(IExperimentElement next) throws UnsupportedOperationException {
@@ -56,6 +62,12 @@ public interface IExperimentElement {
 
 		@Override
 		public void updateContext(Context context) {
+		}
+
+		@Override
+		public IExperimentElement handleAborted(AbortInnerException exception) {
+			logger.warn("A {} has been thrown and the END was asked to handle it: {}", exception.getClass().getSimpleName(), exception);
+			return null;
 		}
 	};
 
@@ -126,5 +138,16 @@ public interface IExperimentElement {
 	 * @return A string representation.
 	 */
 	String toString(String newLinePrefix);
+
+	/**
+	 * Called if an {@link AbortInnerException} has been thrown in the context of this element.
+	 *
+	 * @param exception
+	 *            The thrown exception.
+	 * @return The {@link IExperimentElement} to be processed next.
+	 * @throws AbortInnerException
+	 *             If the exception cannot be handled, it is re-thrown.
+	 */
+	IExperimentElement handleAborted(AbortInnerException exception);
 
 }

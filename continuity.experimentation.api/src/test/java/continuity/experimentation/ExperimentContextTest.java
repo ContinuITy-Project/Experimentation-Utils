@@ -13,6 +13,7 @@ import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.action.ContextChange;
 import org.continuity.experimentation.action.Delay;
 import org.continuity.experimentation.builder.ExperimentBuilder;
+import org.continuity.experimentation.exception.AbortException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,7 +44,7 @@ public class ExperimentContextTest {
 	}
 
 	@Test
-	public void testLoop() {
+	public void testLoop() throws AbortException {
 		ExperimentBuilder builder = new ExperimentBuilder();
 		Experiment experiment = builder.newExperiment("loop-test").loop(5).append(new Delay(1)).end().end().build();
 		experiment.execute(contextMock);
@@ -51,7 +52,8 @@ public class ExperimentContextTest {
 		ArgumentCaptor<String> appendedCaptor = ArgumentCaptor.forClass(String.class);
 		ArgumentCaptor<String> removedCaptor = ArgumentCaptor.forClass(String.class);
 
-		Mockito.verify(contextMock, Mockito.times(6)).append(appendedCaptor.capture());
+		Mockito.verify(contextMock, Mockito.times(1)).append(appendedCaptor.capture());
+		Mockito.verify(contextMock, Mockito.times(5)).append(Mockito.any(), appendedCaptor.capture());
 		assertThat(appendedCaptor.getAllValues()).containsExactly("loop-test", "iteration#1", "iteration#2", "iteration#3", "iteration#4", "iteration#5");
 
 		Mockito.verify(contextMock, Mockito.times(6)).remove(removedCaptor.capture());
@@ -59,7 +61,7 @@ public class ExperimentContextTest {
 	}
 
 	@Test
-	public void testConcurrent() {
+	public void testConcurrent() throws AbortException {
 		ExperimentBuilder builder = new ExperimentBuilder();
 		Experiment experiment = builder.newExperiment("concurrent-test").concurrent().thread().append(new Delay(1)).end().thread().append(new Delay(1)).end().thread().append(new Delay(1)).end().end()
 				.end().build();
@@ -68,7 +70,8 @@ public class ExperimentContextTest {
 		ArgumentCaptor<String> appendedCaptor = ArgumentCaptor.forClass(String.class);
 		ArgumentCaptor<String> removedCaptor = ArgumentCaptor.forClass(String.class);
 
-		Mockito.verify(contextMock, Mockito.times(4)).append(appendedCaptor.capture());
+		Mockito.verify(contextMock, Mockito.times(1)).append(appendedCaptor.capture());
+		Mockito.verify(contextMock, Mockito.times(3)).append(Mockito.any(), appendedCaptor.capture());
 		assertThat(appendedCaptor.getAllValues()).containsExactlyInAnyOrder("concurrent-test", "thread#1", "thread#2", "thread#3");
 
 		Mockito.verify(contextMock, Mockito.times(4)).remove(removedCaptor.capture());
@@ -76,7 +79,7 @@ public class ExperimentContextTest {
 	}
 
 	@Test
-	public void testCombination() {
+	public void testCombination() throws AbortException {
 		MockedContext context = new MockedContext(pathMock);
 		ContextChange contextChange = new ContextChange("custom");
 

@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.continuity.experimentation.Context;
+import org.continuity.experimentation.IExperimentElement;
 
 /**
  * @author Henning Schulz
@@ -46,12 +48,12 @@ public class MockedContext extends Context {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Context clone() {
-		return new Clone((Stack<String>) getContextStack().clone());
+		return new Clone((Stack<Pair<IExperimentElement, String>>) getContextStack().clone());
 	}
 
 	public class Clone extends Context {
 
-		public Clone(Stack<String> contextStack) {
+		public Clone(Stack<Pair<IExperimentElement, String>> contextStack) {
 			super(contextStack);
 		}
 
