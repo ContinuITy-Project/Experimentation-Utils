@@ -1,8 +1,10 @@
 package org.continuity.experimentation.action.inspectit;
 
+import java.util.Date;
+
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
-import org.continuity.experimentation.action.RandomSelection;
+import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,18 +18,44 @@ public class StopRecording extends AbstractRestAction {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RandomSelection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StopRecording.class);
 
 	/**
-	 * Constructor
+	 * Stop time data holder.
 	 */
-	public StopRecording() {
-		// TODO: Make the host and port configurable
-		super("letslx037", "8182");
+	private final IDataHolder<Date> stopTimeDataHolder;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param stopTimeDataHolder
+	 *            [OUTPUT] Holds the stop time.
+	 * @param host
+	 *            Host name of the inspectIT CMR.
+	 * @param port
+	 *            Port of the inspectIT CMR.
+	 */
+	public StopRecording(IDataHolder<Date> stopTimeDataHolder, String host, String port) {
+		super(host, port);
+		this.stopTimeDataHolder = stopTimeDataHolder;
+	}
+
+	/**
+	 * Constructor. Uses the default port 8182.
+	 *
+	 * @param stopTimeDataHolder
+	 *            [OUTPUT] Holds the stop time.
+	 * @param host
+	 *            Host name of the inspectIT CMR.
+	 */
+	public StopRecording(IDataHolder<Date> stopTimeDataHolder, String host) {
+		super(host, "8182");
+		this.stopTimeDataHolder = stopTimeDataHolder;
 	}
 
 	@Override
 	public void execute(Context context) {
+		stopTimeDataHolder.set(new Date());
 		get("/rest/storage/stop", String.class);
 
 		LOGGER.info("Recording stopped");

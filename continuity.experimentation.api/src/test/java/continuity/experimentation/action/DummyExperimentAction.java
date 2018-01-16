@@ -3,6 +3,7 @@ package continuity.experimentation.action;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.data.IDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 
 /**
  * @author Henning Schulz
@@ -26,9 +27,11 @@ public class DummyExperimentAction implements IExperimentAction {
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws AbortInnerException
 	 */
 	@Override
-	public void execute(Context context) {
+	public void execute(Context context) throws AbortInnerException {
 		System.out.println("Input: " + (inputHolder.isSet() ? inputHolder.get() : "not set"));
 		outputHolder.set(message);
 	}

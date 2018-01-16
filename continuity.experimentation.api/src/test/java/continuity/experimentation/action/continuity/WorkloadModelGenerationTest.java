@@ -8,6 +8,7 @@ import java.util.Map;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.continuity.WorkloadModelGeneration;
 import org.continuity.experimentation.data.SimpleDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
@@ -51,18 +52,20 @@ public class WorkloadModelGenerationTest {
 		Mockito.when(restMock.postForEntity(ArgumentMatchers.eq("http://localhost:8080/workloadmodel/error/create"), ArgumentMatchers.any(), ArgumentMatchers.any(Class.class)))
 		.thenReturn(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
 
+		Mockito.when(restMock.getForEntity(ArgumentMatchers.anyString(), ArgumentMatchers.any())).thenReturn(ResponseEntity.ok(null));
+
 		context = new Context();
 	}
 
 	@Test
-	public void testWorking() {
+	public void testWorking() throws AbortInnerException {
 		workingGenerator.execute(context);
 
 		assertThat(output.get()).isEqualTo(RETURN_LINK);
 	}
 
 	@Test(expected = RuntimeException.class)
-	public void testError() {
+	public void testError() throws AbortInnerException {
 		errorGenerator.execute(context);
 	}
 

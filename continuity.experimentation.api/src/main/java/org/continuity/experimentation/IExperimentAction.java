@@ -21,7 +21,8 @@ public interface IExperimentAction {
 	 *             If the inner element (loop, concurrent) should be aborted.
 	 * @throws AbortException
 	 *             If the whole experiment should be aborted.
+	 * @throws Exception
 	 */
-	void execute(Context context) throws AbortInnerException, AbortException;
+	void execute(Context context) throws AbortInnerException, AbortException, Exception;
 
 }

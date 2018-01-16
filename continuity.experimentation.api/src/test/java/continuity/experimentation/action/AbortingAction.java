@@ -25,7 +25,7 @@ public class AbortingAction implements IExperimentAction {
 		}
 
 		if (abortInner) {
-			throw new AbortInnerException(AbortInnerException.Type.LOOP, context, "Intentionally aborting.");
+			throw new AbortInnerException(context, "Intentionally aborting.");
 		}
 	}
 

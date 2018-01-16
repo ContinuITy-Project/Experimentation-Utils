@@ -6,6 +6,7 @@ import java.util.Map;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.data.IDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +89,9 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute(Context context) {
+	public void execute(Context context) throws AbortInnerException {
+		LOGGER.info("Transforming the workload model {} to a {} test and executing it...", workloadLink.get(), loadTestType);
+
 		Map<String, String> message = new HashMap<>();
 		message.put("tag", tag.get());
 		message.put("workload-link", workloadLink.get());

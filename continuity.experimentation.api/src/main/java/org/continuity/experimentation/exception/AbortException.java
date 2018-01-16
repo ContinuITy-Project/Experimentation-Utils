@@ -1,5 +1,7 @@
 package org.continuity.experimentation.exception;
 
+import java.util.Objects;
+
 import org.continuity.experimentation.Context;
 
 /**
@@ -26,7 +28,7 @@ public class AbortException extends Exception {
 	 *            The originally thrown exception.
 	 */
 	public AbortException(Context context, Exception cause) {
-		super(MESSAGE.replaceFirst(PATTERN, cause.getClass().getSimpleName()).replaceFirst(PATTERN, context.toString()), cause);
+		super(MESSAGE.replaceFirst(PATTERN, (cause != null ? cause.getClass().getSimpleName() : null)).replaceFirst(PATTERN, Objects.toString(context)), cause);
 	}
 
 	/**
@@ -39,7 +41,7 @@ public class AbortException extends Exception {
 	 *            A message to be added to the exception.
 	 */
 	public AbortException(Context context, String additionalMessage) {
-		super(MESSAGE.replaceFirst(PATTERN, additionalMessage).replaceFirst(PATTERN, context.toString()));
+		super(MESSAGE.replaceFirst(PATTERN, additionalMessage).replaceFirst(PATTERN, Objects.toString(context)));
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class AbortException extends Exception {
 	 *            The originally thrown exception.
 	 */
 	public AbortException(Context context, String additionalMessage, Exception cause) {
-		super(MESSAGE.replaceFirst(PATTERN, additionalMessage + " ").replaceFirst(PATTERN, context.toString()));
+		super(MESSAGE.replaceFirst(PATTERN, additionalMessage + " ").replaceFirst(PATTERN, Objects.toString(context)));
 	}
 
 }

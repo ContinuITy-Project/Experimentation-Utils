@@ -1,14 +1,20 @@
 package org.continuity.experimentation.action.continuity;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
 import org.continuity.experimentation.data.IDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Causes generation of a new workload model based on a data link and stores the link to the
@@ -98,14 +104,24 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 
 	/**
 	 * {@inheritDoc}
+	 *
+	 * @throws AbortInnerException
 	 */
 	@Override
-	public void execute(Context context) {
-		Map<String, String> body = new HashMap<>();
-		body.put("data", dataLink.get());
-		body.put("tag", tag);
+	public void execute(Context context) throws AbortInnerException {
+		String dataLinkString;
+		JsonNodeFactory factory = new JsonNodeFactory(false);
+		ObjectNode node = factory.objectNode();
 
-		Map<?, ?> reponse = post("/workloadmodel/" + wmType + "/create", Map.class, body);
+		dataLinkString = dataLink.get();
+		node.put("data", dataLinkString);
+		node.put("tag", tag);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		HttpEntity<String> entity = new HttpEntity<String>(node.toString(), headers);
+
+		Map<?, ?> reponse = post("/workloadmodel/" + wmType + "/create", Map.class, entity);
 
 		String message = reponse.get("message").toString();
 		String link = reponse.get("link").toString();
@@ -113,7 +129,25 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 		if (link == null) {
 			LOGGER.error("The response did not contain a link! Message from server: '{}'", message);
 		} else {
-			LOGGER.info("Workload model creation initiated. Message from server is '{}' and link is '{}'", message, link);
+			LOGGER.info("Workload model creation initiated. Message from server is '{}' and link is '{}'. Waiting for creation finished...", message, link);
+
+			boolean finished = false;
+			long timeout = 40000;
+			int loopCounter = 0;
+			while (!finished) {
+				if (loopCounter > 180) {
+					LOGGER.error("Waiting for more than half an hour for the workload model to be finished. Aborting!");
+					break;
+				}
+
+				Map<?, ?> waitResponse = get("/workloadmodel/wait/" + link + "?timeout=" + timeout, Map.class);
+
+				if ((waitResponse != null) && !waitResponse.isEmpty()) {
+					finished = true;
+				}
+
+				loopCounter++;
+			}
 		}
 
 		workloadLink.set(link);

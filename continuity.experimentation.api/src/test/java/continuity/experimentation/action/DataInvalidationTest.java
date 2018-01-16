@@ -5,6 +5,7 @@ import org.continuity.experimentation.action.DataInvalidation;
 import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +30,8 @@ public class DataInvalidationTest {
 		experiment = builder.newExperiment("Invalidation").append(action).append(invalidation).end().build();
 	}
 
-	@Test(expected = IllegalStateException.class)
-	public void test() throws AbortException {
+	@Test(expected = AbortInnerException.class)
+	public void test() throws AbortException, AbortInnerException {
 		experiment.execute();
 
 		Assert.assertEquals("Expected action to write B to str2.", "B", str2.get());

@@ -7,6 +7,7 @@ import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.AppendingStringHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +45,7 @@ public class ConcurrentActionTest {
 	}
 
 	@Test
-	public void test() throws AbortException {
+	public void test() throws AbortException, AbortInnerException {
 		experiment.execute();
 
 		assertEquals("Step one should output 'Hello'.", "Hello", str2.get());

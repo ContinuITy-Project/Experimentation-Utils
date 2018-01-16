@@ -127,7 +127,7 @@ public class Context implements Cloneable {
 			if (first) {
 				first = false;
 			} else {
-				builder.append("/");
+				builder.append("-");
 			}
 
 			builder.append(element.getRight());

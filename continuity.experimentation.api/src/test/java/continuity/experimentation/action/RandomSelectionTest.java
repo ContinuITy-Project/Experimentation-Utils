@@ -11,6 +11,7 @@ import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.RandomSelection;
 import org.continuity.experimentation.data.IDataHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class RandomSelectionTest {
 	}
 
 	@Test
-	public void testWithTwiceInARow() {
+	public void testWithTwiceInARow() throws AbortInnerException {
 		selection = new RandomSelection<>(inputHolder, outputHolder, false);
 
 		Set<String> selected = new HashSet<>();
@@ -54,7 +55,7 @@ public class RandomSelectionTest {
 	}
 
 	@Test
-	public void testWithoutTwiceInARow() {
+	public void testWithoutTwiceInARow() throws AbortInnerException {
 		selection = new RandomSelection<>(inputHolder, outputHolder, true);
 
 		boolean first = true;
@@ -75,7 +76,7 @@ public class RandomSelectionTest {
 	}
 
 	@Test
-	public void testWithoutTwiceInARowAndOneElement() {
+	public void testWithoutTwiceInARowAndOneElement() throws AbortInnerException {
 		inputHolder = new SimpleDataHolder<>("input", Arrays.asList("first"));
 		selection = new RandomSelection<>(inputHolder, outputHolder, true);
 

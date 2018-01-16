@@ -1,10 +1,12 @@
 package org.continuity.experimentation.action.inspectit;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.action.AbstractRestAction;
-import org.continuity.experimentation.action.RandomSelection;
+import org.continuity.experimentation.data.IDataHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,7 +25,7 @@ public class StartNewRecording extends AbstractRestAction {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RandomSelection.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StartNewRecording.class);
 
 	/**
 	 * storage name.
@@ -31,21 +33,62 @@ public class StartNewRecording extends AbstractRestAction {
 	private String storageName;
 
 	/**
-	 * Constructor
+	 * Flag, which determine, whether storage name is set.
+	 */
+	private boolean storageNameSet = false;
+
+	/**
+	 * Time data holder.
+	 */
+	private final IDataHolder<Date> timeDataHolder;
+
+	/**
+	 * Constructor.
 	 *
 	 * @param storageName
 	 *            name of new storage
-	 * @param recordingDuration
-	 *            duration of the recording
+	 * @param timeDataHolder
+	 *            [OUTPUT] Holds the start time.
+	 * @param host
+	 *            Host name of the inspectIT CMR.
+	 * @param port
+	 *            Port of the inspectIT CMR.
 	 */
-	public StartNewRecording(String storageName) {
-		// TODO: Make the host and port configurable
-		super("letslx037", "8182");
+	public StartNewRecording(String storageName, IDataHolder<Date> timeDataHolder, String host, String port) {
+		super(host, port);
 		this.storageName = storageName;
+		this.storageNameSet = true;
+		this.timeDataHolder = timeDataHolder;
+	}
+
+	/**
+	 * Constructor. Uses the default port 8182.
+	 *
+	 * @param storageName
+	 *            name of new storage
+	 * @param timeDataHolder
+	 *            [OUTPUT] Holds the start time.
+	 * @param host
+	 *            Host name of the inspectIT CMR.
+	 */
+	public StartNewRecording(String storageName, IDataHolder<Date> timeDataHolder, String host) {
+		super(host, "8182");
+		this.storageName = storageName;
+		this.storageNameSet = true;
+		this.timeDataHolder = timeDataHolder;
 	}
 
 	@Override
 	public void execute(Context context) {
+		Date currentDate = new Date();
+		String pattern = "yyyy-MM-dd-HH-mm-ss";
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		if (!storageNameSet) {
+			this.storageName = context.toString() + "--" + format.format(currentDate);
+		}
+		// Set startDate
+		timeDataHolder.set(new Date());
+
 		// Create new storage
 		String creationResponse = get("/rest/storage/" + storageName + "/create", String.class);
 

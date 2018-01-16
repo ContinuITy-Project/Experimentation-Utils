@@ -1,5 +1,7 @@
 package org.continuity.experimentation.data;
 
+import org.continuity.experimentation.exception.AbortInnerException;
+
 /**
  * Abstract class providing management of write and read notifications.
  *
@@ -30,18 +32,21 @@ public abstract class AbstractDataHolder<T> implements IDataHolder<T> {
 	 *
 	 * @throws IllegalStateException
 	 *             If the content is not ready to be read.
+	 * @throws AbortInnerException
 	 */
-	protected void notifyRead() throws IllegalStateException {
+	protected void notifyRead() throws AbortInnerException {
 		if (!writeNotified) {
-			throw new IllegalStateException(getClass().getSimpleName() + " '" + name + "' (holds " + dataType.getSimpleName() + ") is notified to be read before data has been written!");
+			throw new AbortInnerException(null, getClass().getSimpleName() + " '" + name + "' (holds " + dataType.getSimpleName() + ") is notified to be read before data has been written!");
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws AbortInnerException
 	 */
 	@Override
-	public T get() throws IllegalStateException {
+	public T get() throws AbortInnerException {
 		notifyRead();
 		return getWithoutNotification();
 	}

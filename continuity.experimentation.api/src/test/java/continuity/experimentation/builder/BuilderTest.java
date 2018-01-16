@@ -7,6 +7,7 @@ import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.AppendingStringHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.junit.Test;
 
 import continuity.experimentation.action.DummyExperimentAction;
@@ -18,7 +19,7 @@ import continuity.experimentation.action.DummyExperimentAction;
 public class BuilderTest {
 
 	@Test
-	public void test() throws AbortException {
+	public void test() throws AbortException, AbortInnerException {
 		SimpleDataHolder<String> str1 = new SimpleDataHolder<>("str1", "Hi, how are you?");
 		SimpleDataHolder<String> str2 = new SimpleDataHolder<>("str2", String.class);
 		SimpleDataHolder<String> str3 = new SimpleDataHolder<>("str3", String.class);

@@ -1,5 +1,7 @@
 package org.continuity.experimentation.data;
 
+import org.continuity.experimentation.exception.AbortInnerException;
+
 /**
  * Common interface for holders of data to be exchanged between experiment actions.
  *
@@ -20,12 +22,13 @@ public interface IDataHolder<T> {
 	 * Reads the content.
 	 *
 	 * @return Contained content.
+	 * @throws AbortInnerException
 	 */
-	T get();
+	T get() throws AbortInnerException;
 
 	/**
 	 * Returns whether the data already has been set.
-	 * 
+	 *
 	 * @return {@code true} if the data has been set or {@code false} otherwise.
 	 */
 	boolean isSet();

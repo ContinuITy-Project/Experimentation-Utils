@@ -7,6 +7,7 @@ import java.util.Random;
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.data.IDataHolder;
+import org.continuity.experimentation.exception.AbortInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +45,11 @@ public class RandomSelection<T> implements IExperimentAction {
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws AbortInnerException
 	 */
 	@Override
-	public void execute(Context context) {
+	public void execute(Context context) throws AbortInnerException {
 		List<T> selection;
 
 		if (!avoidTwiceInARow) {
