@@ -1,5 +1,7 @@
 package org.continuity.experimentation;
 
+import org.continuity.experimentation.builder.ExperimentBuilderImpl;
+import org.continuity.experimentation.builder.StableExperimentBuilder;
 import org.continuity.experimentation.exception.AbortException;
 
 /**
@@ -20,6 +22,17 @@ public class Experiment extends AbstractExperimentExecutor {
 	public Experiment(String name, IExperimentElement first) {
 		super(first);
 		this.name = name;
+	}
+
+	/**
+	 * Starts building a new experiment.
+	 * 
+	 * @param name
+	 *            The name of the experiment to be built.
+	 * @return A builder for building the experiment.
+	 */
+	public static StableExperimentBuilder newExperiment(String name) {
+		return new ExperimentBuilderImpl(name);
 	}
 
 	/**

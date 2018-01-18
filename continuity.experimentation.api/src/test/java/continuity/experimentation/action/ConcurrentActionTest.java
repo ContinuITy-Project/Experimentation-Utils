@@ -3,7 +3,6 @@ package continuity.experimentation.action;
 import static org.junit.Assert.assertEquals;
 
 import org.continuity.experimentation.Experiment;
-import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.AppendingStringHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
@@ -28,20 +27,17 @@ public class ConcurrentActionTest {
 
 	@Before
 	public void setupExperiment() {
-		ExperimentBuilder builder = new ExperimentBuilder();
-
 		DummyExperimentAction step1 = new DummyExperimentAction(str1, str2, "Hello");
 		DummyExperimentAction step2 = new DummyExperimentAction(str2, str3, "I'm fine.");
 		DummyExperimentAction step3 = new DummyExperimentAction(str2, str4, "I'm not feeling good.");
 
 		DummyExperimentAction countStep = new DummyExperimentAction(counter, counter, "|");
 
-		experiment = builder.newExperiment("Concurrent") //
-				.concurrent() //
-				.thread().append(step1).append(step2).end() //
-				.thread().append(step3).end() //
-				.thread().loop(5).append(countStep).end().end() //
-				.end().end().build();
+		experiment = Experiment.newExperiment("Concurrent") //
+				.newThread().append(step1).append(step2) //
+				.newThread().append(step3) //
+				.newThread().loop(5).append(countStep).endLoop() //
+				.join().build();
 	}
 
 	@Test

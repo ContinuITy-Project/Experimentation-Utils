@@ -5,7 +5,6 @@ import java.nio.file.Path;
 
 import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.action.Delay;
-import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.exception.AbortException;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,18 +33,13 @@ public class ExperimentAbortingTest {
 		Mockito.when(pathMock.toFile()).thenReturn(fileMock);
 		context = new MockedContext(pathMock);
 
-		ExperimentBuilder builder = new ExperimentBuilder();
-
-		experiment = builder.newExperiment("ExperimentAbortingTest") //
+		experiment = Experiment.newExperiment("ExperimentAbortingTest") //
 				.loop(5) //
 				.append(new Delay(1)) //
-				.concurrent().thread().append(new Delay(1))
-				.append(abortingAction)
-				.end() //
-				.thread().append(new Delay(1)).end().end() // end concurrent
-				.branch().ifThen(() -> true).append(abortingAction).end().end() // end branch
-				.end() // end loop
-				.end() // end experiment
+				.newThread().append(new Delay(1)).append(abortingAction) //
+				.newThread().append(new Delay(1)).join() //
+				.ifThen(() -> true).append(abortingAction).endIf() // end branch
+				.endLoop() // end loop
 				.build();
 	}
 

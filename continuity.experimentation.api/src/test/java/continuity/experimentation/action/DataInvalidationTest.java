@@ -2,7 +2,6 @@ package continuity.experimentation.action;
 
 import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.action.DataInvalidation;
-import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
 import org.continuity.experimentation.exception.AbortInnerException;
@@ -26,8 +25,7 @@ public class DataInvalidationTest {
 		DummyExperimentAction action = new DummyExperimentAction(str1, str2, "B");
 		DataInvalidation invalidation = new DataInvalidation(str1);
 
-		ExperimentBuilder builder = new ExperimentBuilder();
-		experiment = builder.newExperiment("Invalidation").append(action).append(invalidation).end().build();
+		experiment = Experiment.newExperiment("Invalidation").append(action).append(invalidation).build();
 	}
 
 	@Test(expected = AbortInnerException.class)

@@ -1,48 +1,20 @@
 package org.continuity.experimentation.builder;
 
-import org.continuity.experimentation.IExperimentElement;
-import org.continuity.experimentation.element.ConcurrentElement;
-
 /**
+ * Builds concurrent threads.
+ *
  * @author Henning Schulz
  *
+ * @param <C>
+ *            Type of the builder that called this builder.
  */
-public class ConcurrentBuilder<C extends IExperimentBuilder> extends AbstractExperimentElementBuilder<C> implements IExperimentBuilder {
-
-	private ConcurrentElement concurrentElement = new ConcurrentElement();
-
-	public ConcurrentBuilder(C caller) {
-		super(caller);
-	}
-
-	public ExperimentElementBuilder<ConcurrentBuilder<C>> thread() {
-		return new ExperimentElementBuilder<>(this);
-	}
+public interface ConcurrentBuilder<C> extends ExperimentBuilder<ConcurrentBuilder<C>, ConcurrentBuilder<C>>, Branchable<IfBranchBuilder<ConcurrentBuilder<C>>> {
 
 	/**
-	 * {@inheritDoc}
+	 * Joins all currently open threads. That is, all threads that were created since the last join.
+	 *
+	 * @return A builder for adding synchronous elements after the concurrent part.
 	 */
-	@Override
-	public IExperimentElement getResult() {
-		return concurrentElement;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IExperimentElement getLast() {
-		return concurrentElement.getJoin();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void onReturn(IExperimentElement result, IExperimentElement last) {
-		if (result != null) {
-			concurrentElement.addThread(result);
-		}
-	}
+	C join();
 
 }

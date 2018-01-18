@@ -12,7 +12,6 @@ import org.continuity.experimentation.Context;
 import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.action.ContextChange;
 import org.continuity.experimentation.action.Delay;
-import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.exception.AbortException;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,8 +44,7 @@ public class ExperimentContextTest {
 
 	@Test
 	public void testLoop() throws AbortException {
-		ExperimentBuilder builder = new ExperimentBuilder();
-		Experiment experiment = builder.newExperiment("loop-test").loop(5).append(new Delay(1)).end().end().build();
+		Experiment experiment = Experiment.newExperiment("loop-test").loop(5).append(new Delay(1)).endLoop().build();
 		experiment.execute(contextMock);
 
 		ArgumentCaptor<String> appendedCaptor = ArgumentCaptor.forClass(String.class);
@@ -62,9 +60,7 @@ public class ExperimentContextTest {
 
 	@Test
 	public void testConcurrent() throws AbortException {
-		ExperimentBuilder builder = new ExperimentBuilder();
-		Experiment experiment = builder.newExperiment("concurrent-test").concurrent().thread().append(new Delay(1)).end().thread().append(new Delay(1)).end().thread().append(new Delay(1)).end().end()
-				.end().build();
+		Experiment experiment = Experiment.newExperiment("concurrent-test").newThread().append(new Delay(1)).newThread().append(new Delay(1)).newThread().append(new Delay(1)).join().build();
 		experiment.execute(contextMock);
 
 		ArgumentCaptor<String> appendedCaptor = ArgumentCaptor.forClass(String.class);
@@ -83,12 +79,8 @@ public class ExperimentContextTest {
 		MockedContext context = new MockedContext(pathMock);
 		ContextChange contextChange = new ContextChange("custom");
 
-		ExperimentBuilder builder = new ExperimentBuilder();
-		Experiment experiment = builder.newExperiment("combined-test").loop(5).append(new Delay(1)).concurrent().thread().append(contextChange.append()).append(new Delay(1))
-				.append(contextChange.remove()).end().thread()
-				.append(new Delay(1)).end().end().end()
-				.end()
-				.build();
+		Experiment experiment = Experiment.newExperiment("combined-test").loop(5).append(new Delay(1)).newThread().append(contextChange.append()).append(new Delay(1)).append(contextChange.remove())
+				.newThread().append(new Delay(1)).join().endLoop().build();
 
 		experiment.execute(context);
 

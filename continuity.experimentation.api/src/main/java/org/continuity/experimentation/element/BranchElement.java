@@ -106,7 +106,7 @@ public class BranchElement implements IExperimentElement {
 	 */
 	@Override
 	public void setNextOrFail(IExperimentElement next) throws UnsupportedOperationException {
-		throw new UnsupportedOperationException("Cannot add next to BranchElement! Use addBranch() instead.");
+		join.setNext(next);
 	}
 
 	/**

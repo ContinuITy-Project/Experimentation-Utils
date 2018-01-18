@@ -3,7 +3,6 @@ package continuity.experimentation.builder;
 import static org.junit.Assert.assertEquals;
 
 import org.continuity.experimentation.Experiment;
-import org.continuity.experimentation.builder.ExperimentBuilder;
 import org.continuity.experimentation.data.AppendingStringHolder;
 import org.continuity.experimentation.data.SimpleDataHolder;
 import org.continuity.experimentation.exception.AbortException;
@@ -32,13 +31,7 @@ public class BuilderTest {
 
 		DummyExperimentAction countStep = new DummyExperimentAction(counter, counter, "|");
 
-		ExperimentBuilder builder = new ExperimentBuilder();
-		Experiment experiment = builder.newExperiment("My Experiment") //
-				.branch().elseThen().append(step1) //
-				.branch().ifThen(() -> true).append(step2).end().elseThen().append(step3).end() //
-				.loop(5).append(countStep).end() //
-				.end().end() //
-				.build();
+		Experiment experiment = Experiment.newExperiment("BuilderTest-1").append(step1).ifThen(() -> true).append(step2).elseThen().append(step3).endIf().loop(5).append(countStep).endLoop().build();
 
 		System.out.println(experiment);
 
@@ -51,12 +44,8 @@ public class BuilderTest {
 
 		assertEquals("The experiment should contain x elements", 7.0, experiment.getNumberOfActions(), 0.0001);
 
-		Experiment experiment2 = builder.newExperiment("My Experiment") //
-				.append(step1) //
-				.branch().ifThen(() -> false).append(step2).end().elseThen().append(step3).end() //
-				.loop(2).append(countStep).end() //
-				.end() //
-				.build();
+		Experiment experiment2 = Experiment.newExperiment("BuilderTest-2").append(step1).ifThen(() -> false).append(step2).elseThen().append(step3).endIf().loop(2).append(countStep).endLoop().build();
+
 		experiment2.execute();
 
 		assertEquals("Step one should output 'Hello'.", "Hello", str2.get());

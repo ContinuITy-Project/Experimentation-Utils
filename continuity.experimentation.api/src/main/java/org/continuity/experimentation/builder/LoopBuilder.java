@@ -1,47 +1,20 @@
 package org.continuity.experimentation.builder;
 
-import org.continuity.experimentation.IExperimentElement;
-import org.continuity.experimentation.element.LoopElement;
-
 /**
- * Builder for adding loops.
+ * Builds loops.
  *
  * @author Henning Schulz
  *
+ * @param <C>
+ *            Type of the builder that called this builder.
  */
-public class LoopBuilder<C extends IExperimentBuilder> extends AbstractExperimentElementBuilder<C> {
-
-	private final LoopElement loopElement;
-
-	public LoopBuilder(C caller, int numIterations) {
-		super(caller);
-
-		this.loopElement = new LoopElement(numIterations);
-	}
+public interface LoopBuilder<C> extends ExperimentBuilder<LoopBuilder<C>, ConcurrentBuilder<LoopBuilder<C>>>, Branchable<IfBranchBuilder<LoopBuilder<C>>> {
 
 	/**
-	 * {@inheritDoc}
+	 * Ends the loop.
+	 *
+	 * @return A builder for adding further elements after the loop.
 	 */
-	@Override
-	public void onReturn(IExperimentElement result, IExperimentElement last) {
-		loopElement.setLoopStart(result);
-		last.setNextOrFail(loopElement);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IExperimentElement getResult() {
-		return loopElement;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IExperimentElement getLast() {
-		return loopElement;
-	}
+	C endLoop();
 
 }

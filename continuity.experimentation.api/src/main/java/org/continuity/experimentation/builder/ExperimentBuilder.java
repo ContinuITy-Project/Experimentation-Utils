@@ -1,56 +1,44 @@
 package org.continuity.experimentation.builder;
 
 import org.continuity.experimentation.Experiment;
-import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.IExperimentAction;
 
 /**
- * A builder for {@link Experiment}s.
+ * Common interface for builders for {@link Experiment}s.
  *
  * @author Henning Schulz
  *
+ * @param <T>
+ *            Type of the subinterface.
+ * @param <C>
+ *            Type of the builder to be used for building concurrent threads.
  */
-public class ExperimentBuilder extends AbstractExperimentBuilder {
-
-	private String experimentName;
-	private ExperimentElementBuilder<ExperimentBuilder> elementBuilder;
-
-	public ExperimentElementBuilder<ExperimentBuilder> newExperiment(String name) {
-		experimentName = name;
-		elementBuilder = new ExperimentElementBuilder<>(this);
-		return elementBuilder;
-	}
+public interface ExperimentBuilder<T, C> {
 
 	/**
-	 * Build the experiment.
+	 * Appends a new {@link IExperimentAction}.
 	 *
-	 * @return The constructed experiment.
+	 * @param action
+	 *            The action to be added.
+	 * @return A builder for adding further elements.
 	 */
-	public Experiment build() {
-		return new Experiment(experimentName, elementBuilder.getResult());
-	}
+	T append(IExperimentAction action);
 
 	/**
-	 * {@inheritDoc}
+	 * Starts a new loop.
+	 *
+	 * @param numIterations
+	 *            The number of iterations of the loop.
+	 * @return A builder for adding further elements to the loop.
 	 */
-	@Override
-	protected void onReturn(IExperimentElement result, IExperimentElement last) {
-		last.setNextOrFail(IExperimentElement.END);
-	}
+	LoopBuilder<T> loop(int numIterations);
 
 	/**
-	 * {@inheritDoc}
+	 * Creates a new parallel thread. All opened threads can be joined again by calling
+	 * {@link ConcurrentBuilder#join()}.
+	 *
+	 * @return A builder for adding elements to the thread.
 	 */
-	@Override
-	public IExperimentElement getResult() {
-		return elementBuilder.getResult();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IExperimentElement getLast() {
-		return elementBuilder.getLast();
-	}
+	C newThread();
 
 }
