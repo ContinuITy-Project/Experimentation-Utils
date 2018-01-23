@@ -60,11 +60,7 @@ public class JoinElement implements IExperimentElement {
 	 */
 	@Override
 	public double count() {
-		if (next == null) {
-			return 0;
-		} else {
-			return next.count();
-		}
+		return 0;
 	}
 
 	/**
@@ -72,7 +68,7 @@ public class JoinElement implements IExperimentElement {
 	 */
 	@Override
 	public String toString() {
-		return toString(null);
+		return "JOIN";
 	}
 
 	/**
@@ -80,7 +76,7 @@ public class JoinElement implements IExperimentElement {
 	 */
 	@Override
 	public String toString(String newLinePrefix) {
-		return "JOIN";
+		return "";
 	}
 
 	/**

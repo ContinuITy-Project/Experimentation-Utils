@@ -80,4 +80,12 @@ public abstract class AbstractRestAction implements IExperimentAction {
 		return response.getBody();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return host + ":" + port;
+	}
+
 }

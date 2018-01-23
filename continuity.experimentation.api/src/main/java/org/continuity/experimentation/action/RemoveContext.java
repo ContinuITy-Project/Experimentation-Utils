@@ -25,4 +25,12 @@ public class RemoveContext implements IExperimentAction {
 		context.remove(this.context);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Remove context \"" + context + "\"";
+	}
+
 }

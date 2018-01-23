@@ -26,10 +26,6 @@ public class LoopElement implements IExperimentElement {
 
 	private int currentIteration = 1;
 
-	boolean counting = false;
-
-	boolean convertingToString = false;
-
 	public LoopElement(int numIterations) {
 		this.numIterations = numIterations;
 	}
@@ -104,13 +100,7 @@ public class LoopElement implements IExperimentElement {
 	 */
 	@Override
 	public double count() {
-		if (counting) {
-			counting = false;
-			return 0;
-		} else {
-			counting = true;
-			return (loopStart.count() * numIterations) + (afterLoop == null ? 0 : afterLoop.count());
-		}
+		return (loopStart.count() * numIterations) + (afterLoop == null ? 0 : afterLoop.count());
 	}
 
 	/**
@@ -125,23 +115,22 @@ public class LoopElement implements IExperimentElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString(String newLinePrefix) {
+	public String toString(String prefix) {
 		StringBuilder builder = new StringBuilder();
 
-		if (!convertingToString) {
-			convertingToString = true;
-			builder.append("LOOP (");
-			builder.append(numIterations);
-			builder.append(" iterations):\n");
-			builder.append(newLinePrefix);
-			builder.append(loopStart.toString(newLinePrefix));
-		} else {
-			convertingToString = false;
-			builder.append("END-LOOP\n--> ");
-			builder.append(afterLoop.toString(newLinePrefix));
+		builder.append(prefix);
+		builder.append("LOOP (");
+		builder.append(numIterations);
+		builder.append(" iterations):\n");
+		builder.append(loopStart.toString(prefix + SHIFTING));
+
+		builder.append(prefix);
+		builder.append("END-LOOP");
+
+		if (afterLoop != null) {
+			builder.append("\n");
+			builder.append(afterLoop.toString(prefix));
 		}
-
-
 
 		return builder.toString();
 	}
@@ -153,6 +142,89 @@ public class LoopElement implements IExperimentElement {
 	public IExperimentElement handleAborted(AbortInnerException exception) {
 		LOGGER.info("Handling a {} and continuing with the next iteration.", exception.getClass().getSimpleName());
 		return this;
+	}
+
+	/**
+	 * Gets an {@link IExperimentElement} to be added as successor of the last element in the loop.
+	 *
+	 * @return An element representing the end of a loop.
+	 */
+	public IExperimentElement getLoopEnd() {
+		return new End(this);
+	}
+
+	private final class End implements IExperimentElement {
+
+		private final LoopElement loop;
+
+		private End(LoopElement loop) {
+			this.loop = loop;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void updateContext(Context context) {
+			loop.updateContext(context);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean hasAction() {
+			return loop.hasAction();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public IExperimentElement getNext() {
+			return loop.getNext();
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void setNextOrFail(IExperimentElement next) throws UnsupportedOperationException {
+			loop.setNextOrFail(next);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public double count() {
+			return 0;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String toString(String newLinePrefix) {
+			return "";
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public String toString() {
+			return "END-LOOP";
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public IExperimentElement handleAborted(AbortInnerException exception) {
+			return loop.handleAborted(exception);
+		}
+
 	}
 
 }

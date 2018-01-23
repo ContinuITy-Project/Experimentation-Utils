@@ -33,4 +33,12 @@ public class DataInvalidation implements IExperimentAction {
 		dataHolders.forEach(IDataHolder::invalidate);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Invalidate " + dataHolders;
+	}
+
 }

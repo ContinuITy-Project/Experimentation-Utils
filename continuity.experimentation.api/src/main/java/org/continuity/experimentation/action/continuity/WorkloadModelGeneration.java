@@ -153,4 +153,12 @@ public class WorkloadModelGeneration extends AbstractRestAction {
 		workloadLink.set(link);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Create " + wmType + " model from \"" + dataLink + " with tag " + tag + " via host at " + super.toString() + " and store the result to \"" + workloadLink + "\"";
+	}
+
 }

@@ -40,4 +40,12 @@ public class Delay implements IExperimentAction {
 		LOGGER.info("Resuming.");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Wait for " + delayMillis + " ms";
+	}
+
 }

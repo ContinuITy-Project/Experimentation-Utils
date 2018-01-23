@@ -1,4 +1,4 @@
-package org.continuity.experimentation.action;
+package org.continuity.experimentation.action.continuity;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -6,6 +6,7 @@ import java.nio.file.Path;
 
 import org.apache.commons.io.FileUtils;
 import org.continuity.experimentation.Context;
+import org.continuity.experimentation.action.AbstractRestAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,4 +60,13 @@ public class WaitForJmeterReport extends AbstractRestAction {
 			FileUtils.writeStringToFile(basePath.resolve("jmeter-report.csv").toFile(), report, Charset.defaultCharset());
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Wait for the report at " + super.toString();
+	}
+
 }

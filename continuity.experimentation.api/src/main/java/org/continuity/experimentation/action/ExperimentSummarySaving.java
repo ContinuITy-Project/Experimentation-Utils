@@ -46,4 +46,12 @@ public class ExperimentSummarySaving implements IExperimentAction {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Save to " + dir;
+	}
+
 }

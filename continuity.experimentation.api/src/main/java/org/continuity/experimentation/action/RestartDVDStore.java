@@ -66,4 +66,12 @@ public class RestartDVDStore extends AbstractRestAction {
 		LOGGER.info("DVDStore is available");
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Restart the DVDStore at " + super.toString();
+	}
+
 }

@@ -95,7 +95,7 @@ public class ConcurrentElement implements IExperimentElement {
 	 */
 	@Override
 	public double count() {
-		return threads.stream().mapToDouble(IExperimentElement::count).sum();
+		return threads.stream().mapToDouble(IExperimentElement::count).sum() + (join.getNext() == null ? 0 : join.getNext().count());
 	}
 
 	/**
@@ -110,33 +110,24 @@ public class ConcurrentElement implements IExperimentElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString(String newLinePrefix) {
+	public String toString(String prefix) {
 		char counter = 'a';
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("CONCURRENT:");
-
 		for (IExperimentElement thread : threads) {
-			builder.append("\n");
-			builder.append(newLinePrefix);
-			builder.append("    ");
+			builder.append(prefix);
+			builder.append("THREAD ");
 			builder.append(counter++);
-			builder.append(") ");
-			builder.append(thread.toString(newLinePrefix + "       "));
+			builder.append(":\n");
+			builder.append(thread.toString(prefix + SHIFTING));
 		}
+
+		builder.append(prefix);
+		builder.append("JOIN");
 
 		if (join.getNext() != null) {
 			builder.append("\n");
-			String nextLinePrefix = newLinePrefix;
-
-			if (nextLinePrefix.length() >= 4) {
-				// Omit the '--> '
-				nextLinePrefix = nextLinePrefix.substring(0, nextLinePrefix.length() - 4);
-			}
-
-			builder.append(nextLinePrefix);
-			builder.append("--> ");
-			builder.append(join.getNext().toString(nextLinePrefix + "    "));
+			builder.append(join.getNext().toString(prefix));
 		}
 
 		return builder.toString();

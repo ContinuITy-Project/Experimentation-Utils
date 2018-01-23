@@ -106,4 +106,12 @@ public class StartNewRecording extends AbstractRestAction {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Start new inspectIT recording " + " with storage name " + storageName + " at " + super.toString() + " and stores current time to \"" + timeDataHolder + "\"";
+	}
 }

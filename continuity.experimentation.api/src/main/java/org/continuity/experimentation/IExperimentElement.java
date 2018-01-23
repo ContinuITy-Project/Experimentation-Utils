@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
  */
 public interface IExperimentElement {
 
+	public static final String SHIFTING = "    ";
+
 	/**
 	 * Marks the end of the experiment chain.
 	 */
@@ -48,8 +50,8 @@ public interface IExperimentElement {
 		}
 
 		@Override
-		public String toString(String newLinePrefix) {
-			return "END";
+		public String toString(String prefix) {
+			return "";
 		}
 
 		/**
@@ -131,13 +133,13 @@ public interface IExperimentElement {
 	}
 
 	/**
-	 * Converts the element to a string respecting a prefix for new lines.
+	 * Converts the element to a string respecting a prefix.
 	 *
-	 * @param newLinePrefix
-	 *            A prefix for new lines.
+	 * @param prefix
+	 *            The prefix to be added.
 	 * @return A string representation.
 	 */
-	String toString(String newLinePrefix);
+	String toString(String prefix);
 
 	/**
 	 * Called if an {@link AbortInnerException} has been thrown in the context of this element.

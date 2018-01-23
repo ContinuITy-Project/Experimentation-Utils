@@ -87,4 +87,12 @@ public class AppendTimeRangeRequestParameter implements IExperimentAction {
 		requestHolder.set(request + sep + startParamName + "=" + startTimeString + "&" + stopParamName + "=" + stopTimeString);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Append time range (\"" + startTimeDataHolder + "\", \"" + stopTimeDataHolder + "\") to \"" + requestHolder + "\" using parameters (" + startParamName + ", " + stopParamName + ")";
+	}
+
 }

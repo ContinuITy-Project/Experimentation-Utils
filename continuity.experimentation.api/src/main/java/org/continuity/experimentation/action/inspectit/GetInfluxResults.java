@@ -114,4 +114,13 @@ public class GetInfluxResults implements IExperimentAction {
 
 		return builder.toString();
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Get the results from InfluxDB from time range (\"" + startTime + "\", \"" + stopTime + "\")";
+	}
+
 }

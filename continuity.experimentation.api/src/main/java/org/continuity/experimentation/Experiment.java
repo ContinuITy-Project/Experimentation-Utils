@@ -26,7 +26,7 @@ public class Experiment extends AbstractExperimentExecutor {
 
 	/**
 	 * Starts building a new experiment.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the experiment to be built.
 	 * @return A builder for building the experiment.
@@ -61,7 +61,17 @@ public class Experiment extends AbstractExperimentExecutor {
 	 */
 	@Override
 	public String toString() {
-		return "Experiment \"" + name + "\" (" + getNumberOfActions() + " steps):\n" + getFirst().toString();
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("Experiment \"");
+		builder.append(name);
+		builder.append("\" (");
+		builder.append(getNumberOfActions());
+		builder.append(" steps):\n");
+		builder.append(getFirst().toString());
+		builder.append("END-EXPERIMENT");
+
+		return builder.toString();
 	}
 
 }

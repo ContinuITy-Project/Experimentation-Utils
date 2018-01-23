@@ -85,18 +85,17 @@ public class ExperimentActionElement implements IExperimentElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString(String newLinePrefix) {
+	public String toString(String prefix) {
 		StringBuilder builder = new StringBuilder();
 
+		builder.append(prefix);
 		builder.append(action.getClass().getSimpleName());
 		builder.append(": ");
 		builder.append(action.toString());
 
 		if (next != null) {
 			builder.append("\n");
-			builder.append(newLinePrefix);
-			builder.append("--> ");
-			builder.append(next.toString(newLinePrefix + "    "));
+			builder.append(next.toString(prefix));
 		}
 
 		return builder.toString();

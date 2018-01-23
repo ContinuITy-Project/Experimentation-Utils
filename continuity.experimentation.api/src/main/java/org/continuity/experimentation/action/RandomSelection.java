@@ -45,7 +45,7 @@ public class RandomSelection<T> implements IExperimentAction {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws AbortInnerException
 	 */
 	@Override
@@ -68,6 +68,14 @@ public class RandomSelection<T> implements IExperimentAction {
 		last = selected;
 
 		LOGGER.info("Selected {} from {} elements.", selected, size);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Select from \"" + inputHolder + "\" and write to \"" + outputHolder + "\". " + (avoidTwiceInARow ? "Avoid" : "Allow") + " twice in a row.";
 	}
 
 }

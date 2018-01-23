@@ -42,7 +42,7 @@ public abstract class AbstractDataHolder<T> implements IDataHolder<T> {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws AbortInnerException
 	 */
 	@Override

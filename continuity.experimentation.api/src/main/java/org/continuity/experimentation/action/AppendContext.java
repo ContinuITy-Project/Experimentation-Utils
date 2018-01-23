@@ -25,4 +25,12 @@ public class AppendContext implements IExperimentAction {
 		context.append(this.context);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Append \"" + context + "\"";
+	}
+
 }

@@ -172,4 +172,12 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Execute \"" + testPlanBundle + "\" via JMeter host " + super.toString();
+	}
+
 }

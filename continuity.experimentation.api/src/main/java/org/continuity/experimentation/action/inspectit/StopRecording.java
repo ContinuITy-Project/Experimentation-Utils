@@ -60,4 +60,12 @@ public class StopRecording extends AbstractRestAction {
 
 		LOGGER.info("Recording stopped");
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Stops inspectIT recording " + " at " + super.toString() + " and stores current time to \"" + stopTimeDataHolder + "\"";
+	}
 }

@@ -37,4 +37,12 @@ public class CopyFile implements IExperimentAction {
 		FileUtils.copyFile(fromPath.get().toFile(), toPath.get().toFile());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Copy file from \"" + fromPath + "\" to \"" + toPath + "\"";
+	}
+
 }

@@ -61,7 +61,7 @@ public class LoopBuilderImpl<C> extends AbstractExperimentBuilder<C> implements 
 	public C endLoop() {
 		LoopElement result = new LoopElement(numIterations);
 		result.setLoopStart(getFirst());
-		getCurrent().setNextOrFail(result);
+		getCurrent().setNextOrFail(result.getLoopEnd());
 
 		return returnToCaller(result, result);
 	}

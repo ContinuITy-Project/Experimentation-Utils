@@ -103,4 +103,13 @@ public class WorkloadTransformationAndExecution extends AbstractRestAction {
 		LOGGER.info("Response from frontend: {}", response);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "Transform the workload model at \"" + workloadLink + "\" with tag " + tag + " to a " + loadTestType + " test with " + numUsers + " users, " + duration + " s duration and " + rampup
+				+ " s rampup and execute it";
+	}
+
 }

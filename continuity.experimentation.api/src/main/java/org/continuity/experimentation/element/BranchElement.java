@@ -126,7 +126,7 @@ public class BranchElement implements IExperimentElement {
 			num++;
 		}
 
-		return sum / num;
+		return (sum / num) + (join.getNext() == null ? 0 : join.getNext().count());
 	}
 
 	/**
@@ -141,38 +141,30 @@ public class BranchElement implements IExperimentElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String toString(String newLinePrefix) {
+	public String toString(String prefix) {
 		char counter = 'a';
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("BRANCH:");
-
 		for (Pair<BooleanSupplier, IExperimentElement> branch : branches) {
-			builder.append("\n");
-			builder.append(newLinePrefix);
-			builder.append("    ");
+			builder.append(prefix);
+			builder.append("IF ");
 			builder.append(counter++);
-			builder.append(") ");
-			builder.append(branch.getSecond().toString(newLinePrefix + "       "));
+			builder.append(":\n");
+			builder.append(branch.getSecond().toString(prefix + SHIFTING));
 		}
 
-		builder.append("\n");
-		builder.append(newLinePrefix);
-		builder.append("    x) ");
-		builder.append(elseBranch.toString(newLinePrefix + "       "));
+		if (elseBranch != null) {
+			builder.append(prefix);
+			builder.append("ELSE:\n");
+			builder.append(elseBranch.toString(prefix + SHIFTING));
+		}
+
+		builder.append(prefix);
+		builder.append("END-IF");
 
 		if (join.getNext() != null) {
 			builder.append("\n");
-			String nextLinePrefix = newLinePrefix;
-
-			if (nextLinePrefix.length() >= 4) {
-				// Omit the '--> '
-				nextLinePrefix = nextLinePrefix.substring(0, nextLinePrefix.length() - 4);
-			}
-
-			builder.append(nextLinePrefix);
-			builder.append("--> ");
-			builder.append(join.getNext().toString(nextLinePrefix + "    "));
+			builder.append(join.getNext().toString(prefix));
 		}
 
 		return builder.toString();
