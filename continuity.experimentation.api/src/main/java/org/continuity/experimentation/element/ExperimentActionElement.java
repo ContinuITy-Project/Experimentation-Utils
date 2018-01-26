@@ -1,5 +1,8 @@
 package org.continuity.experimentation.element;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
@@ -123,6 +126,14 @@ public class ExperimentActionElement implements IExperimentElement {
 	@Override
 	public IExperimentElement handleAborted(AbortInnerException exception) {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IExperimentElement> iterateToNext() {
+		return Collections.singleton(next);
 	}
 
 }

@@ -59,7 +59,15 @@ public class ExperimentBuilderImpl extends AbstractExperimentBuilder<Experiment>
 	@Override
 	public Experiment build() {
 		getCurrent().setNextOrFail(IExperimentElement.END);
-		return new Experiment(experimentName, getFirst());
+		Experiment experiment = new Experiment(experimentName, getFirst());
+
+		for (IExperimentElement element : experiment) {
+			if (element.hasAction()) {
+				element.getAction().bypassExperiment(experiment);
+			}
+		}
+
+		return experiment;
 	}
 
 }

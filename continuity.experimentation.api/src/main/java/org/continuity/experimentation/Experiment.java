@@ -1,5 +1,7 @@
 package org.continuity.experimentation;
 
+import java.util.Iterator;
+
 import org.continuity.experimentation.builder.ExperimentBuilderImpl;
 import org.continuity.experimentation.builder.StableExperimentBuilder;
 import org.continuity.experimentation.exception.AbortException;
@@ -11,7 +13,7 @@ import org.continuity.experimentation.exception.AbortException;
  * @author Henning Schulz
  *
  */
-public class Experiment extends AbstractExperimentExecutor {
+public class Experiment extends AbstractExperimentExecutor implements Iterable<IExperimentElement> {
 
 	private final String name;
 
@@ -22,6 +24,15 @@ public class Experiment extends AbstractExperimentExecutor {
 	public Experiment(String name, IExperimentElement first) {
 		super(first);
 		this.name = name;
+	}
+
+	/**
+	 * Gets {@link #name}.
+	 * 
+	 * @return {@link #name}
+	 */
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -72,6 +83,14 @@ public class Experiment extends AbstractExperimentExecutor {
 		builder.append("END-EXPERIMENT");
 
 		return builder.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<IExperimentElement> iterator() {
+		return new ExperimentIterator(this);
 	}
 
 }

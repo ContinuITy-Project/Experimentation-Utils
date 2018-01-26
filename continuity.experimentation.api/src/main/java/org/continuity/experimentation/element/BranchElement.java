@@ -1,8 +1,10 @@
 package org.continuity.experimentation.element;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.Pair;
 import org.continuity.experimentation.Context;
@@ -176,6 +178,24 @@ public class BranchElement implements IExperimentElement {
 	@Override
 	public IExperimentElement handleAborted(AbortInnerException exception) {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IExperimentElement> iterateToNext() {
+		List<IExperimentElement> nextElements = branches.stream().map(Pair::getSecond).collect(Collectors.toList());
+
+		if (elseBranch != null) {
+			nextElements.add(elseBranch);
+		}
+
+		if (join.getNext() != null) {
+			nextElements.add(join.getNext());
+		}
+
+		return nextElements;
 	}
 
 }

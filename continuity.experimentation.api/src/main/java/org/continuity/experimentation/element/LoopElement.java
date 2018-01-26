@@ -1,5 +1,8 @@
 package org.continuity.experimentation.element;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.exception.AbortInnerException;
@@ -145,6 +148,14 @@ public class LoopElement implements IExperimentElement {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IExperimentElement> iterateToNext() {
+		return Collections.singleton(loopStart);
+	}
+
+	/**
 	 * Gets an {@link IExperimentElement} to be added as successor of the last element in the loop.
 	 *
 	 * @return An element representing the end of a loop.
@@ -223,6 +234,14 @@ public class LoopElement implements IExperimentElement {
 		@Override
 		public IExperimentElement handleAborted(AbortInnerException exception) {
 			return loop.handleAborted(exception);
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Collection<IExperimentElement> iterateToNext() {
+			return Collections.singleton(loop.afterLoop);
 		}
 
 	}

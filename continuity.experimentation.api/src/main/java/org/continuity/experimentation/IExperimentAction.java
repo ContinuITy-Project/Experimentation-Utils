@@ -25,4 +25,14 @@ public interface IExperimentAction {
 	 */
 	void execute(Context context) throws AbortInnerException, AbortException, Exception;
 
+	/**
+	 * To be called by the experiment builder after the experiment has been created.
+	 *
+	 * @param experiment
+	 *            The built experiment.
+	 */
+	default void bypassExperiment(Experiment experiment) {
+		// do nothing by default
+	}
+
 }

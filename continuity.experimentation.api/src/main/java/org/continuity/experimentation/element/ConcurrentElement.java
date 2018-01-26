@@ -1,6 +1,7 @@
 package org.continuity.experimentation.element;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -220,6 +221,21 @@ public class ConcurrentElement implements IExperimentElement {
 	public IExperimentElement handleAborted(AbortInnerException exception) {
 		LOGGER.info("Handling a {} by stopping the thread.", exception.getClass().getSimpleName());
 		return IExperimentElement.END;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IExperimentElement> iterateToNext() {
+		List<IExperimentElement> nextElements = new ArrayList<>(threads.size() + 1);
+		nextElements.addAll(threads);
+
+		if (join.getNext() != null) {
+			nextElements.add(join.getNext());
+		}
+
+		return nextElements;
 	}
 
 }

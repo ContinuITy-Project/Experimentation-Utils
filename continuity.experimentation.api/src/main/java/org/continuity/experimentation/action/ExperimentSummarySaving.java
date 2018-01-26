@@ -23,10 +23,17 @@ public class ExperimentSummarySaving implements IExperimentAction {
 
 	private final Path dir;
 
-	private final Experiment experiment;
+	private Experiment experiment;
 
-	public ExperimentSummarySaving(Path dir, Experiment experiment) {
+	public ExperimentSummarySaving(Path dir) {
 		this.dir = dir;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void bypassExperiment(Experiment experiment) {
 		this.experiment = experiment;
 	}
 

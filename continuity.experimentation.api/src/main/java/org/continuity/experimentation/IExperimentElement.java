@@ -1,5 +1,8 @@
 package org.continuity.experimentation;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.continuity.experimentation.exception.AbortInnerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +73,11 @@ public interface IExperimentElement {
 		public IExperimentElement handleAborted(AbortInnerException exception) {
 			logger.warn("A {} has been thrown and the END was asked to handle it: {}", exception.getClass().getSimpleName(), exception);
 			return null;
+		}
+
+		@Override
+		public Collection<IExperimentElement> iterateToNext() {
+			return Collections.emptyList();
 		}
 	};
 
@@ -151,5 +159,12 @@ public interface IExperimentElement {
 	 *             If the exception cannot be handled, it is re-thrown.
 	 */
 	IExperimentElement handleAborted(AbortInnerException exception);
+
+	/**
+	 * Returns all next elements for iterating over the whole experiment.
+	 *
+	 * @return The next elements.
+	 */
+	Collection<IExperimentElement> iterateToNext();
 
 }

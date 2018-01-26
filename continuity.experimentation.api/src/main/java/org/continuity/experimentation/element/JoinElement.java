@@ -1,5 +1,8 @@
 package org.continuity.experimentation.element;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.continuity.experimentation.Context;
 import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.exception.AbortInnerException;
@@ -85,6 +88,18 @@ public class JoinElement implements IExperimentElement {
 	@Override
 	public IExperimentElement handleAborted(AbortInnerException exception) {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc} <br>
+	 *
+	 * <b>Note:</b> Always returns an empty list! Since it might succeed several elements, the
+	 * forking elements have to take care that the successors of the join are added.
+	 *
+	 */
+	@Override
+	public Collection<IExperimentElement> iterateToNext() {
+		return Collections.emptyList();
 	}
 
 }
