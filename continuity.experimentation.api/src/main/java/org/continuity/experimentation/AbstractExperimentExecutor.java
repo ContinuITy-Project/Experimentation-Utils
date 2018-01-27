@@ -75,12 +75,11 @@ public abstract class AbstractExperimentExecutor {
 					current = handleAbortInnerException(e, context);
 					continue;
 				} catch (AbortException e) {
-					sendAbortEmail(e);
-					throw e;
+					abort(e);
 				} catch (Exception e) {
 					caughtExceptions.add(e);
-					LOGGER.warn("Action '{}' threw a {}. Ignoring and continuing.", current.getAction(), e.getClass().getSimpleName());
-					e.printStackTrace();
+					LOGGER.warn("Action '{}' threw a {}. Ignoring and continuing.", current.getAction(), e);
+					LOGGER.error("Exception", e);
 				}
 			}
 
@@ -101,21 +100,23 @@ public abstract class AbstractExperimentExecutor {
 			}
 		} else {
 			AbortException abortException = new AbortException(context, e);
-			sendAbortEmail(abortException);
-			throw abortException;
+			abort(abortException);
 		}
 
 		return null;
 	}
 
-	private void sendAbortEmail(AbortException exception) {
+	private void abort(AbortException exception) throws AbortException {
+		LOGGER.error("The experiment has been aborted!", exception);
+
 		this.abortException = exception;
 		try {
 			EmailReport.send().execute(context);
 		} catch (Exception e) {
-			LOGGER.error("Could not send final report!");
-			e.printStackTrace();
+			LOGGER.error("Could not send final report!", e);
 		}
+
+		throw exception;
 	}
 
 	public ExperimentReport createReport() {

@@ -33,8 +33,8 @@ public class Delay implements IExperimentAction {
 			Thread.sleep(delayMillis);
 		} catch (InterruptedException e) {
 			long sleepDuration = System.currentTimeMillis() - start;
-			LOGGER.warn("Interrupted during sleep. Slept only {} ms instead of {} ms!", sleepDuration, delayMillis);
-			e.printStackTrace();
+			LOGGER.error("Interrupted during sleep. Slept only {} ms instead of {} ms!", sleepDuration, delayMillis);
+			LOGGER.error("Exception", e);
 		}
 
 		LOGGER.info("Resuming.");

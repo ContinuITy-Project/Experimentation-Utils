@@ -23,6 +23,8 @@ public class Context implements Cloneable {
 
 	private final Stack<Pair<IExperimentElement, String>> contextStack;
 
+	private String rootSuffix = "";
+
 	public Context() {
 		this.contextStack = new Stack<>();
 	}
@@ -38,6 +40,16 @@ public class Context implements Cloneable {
 	 */
 	protected Stack<Pair<IExperimentElement, String>> getContextStack() {
 		return this.contextStack;
+	}
+
+	/**
+	 * Sets {@link #rootSuffix}.
+	 * 
+	 * @param rootSuffix
+	 *            New value for {@link #rootSuffix}
+	 */
+	public void setRootSuffix(String rootSuffix) {
+		this.rootSuffix = rootSuffix;
 	}
 
 	/**
@@ -107,8 +119,11 @@ public class Context implements Cloneable {
 	public Path toPath() {
 		Path path = Paths.get("");
 
+		String suffix = rootSuffix;
+
 		for (Pair<IExperimentElement, String> element : contextStack) {
-			path = path.resolve(element.getRight());
+			path = path.resolve(element.getRight() + suffix);
+			suffix = "";
 		}
 
 		return path;

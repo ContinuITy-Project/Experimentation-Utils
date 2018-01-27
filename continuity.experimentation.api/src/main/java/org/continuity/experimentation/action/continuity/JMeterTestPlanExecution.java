@@ -166,7 +166,7 @@ public class JMeterTestPlanExecution extends AbstractRestAction {
 				setBehaviors(behaviors);
 				setTestPlan(node.get("test-plan").asText());
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("Error when reading from JSON!", e);
 			}
 		}
 

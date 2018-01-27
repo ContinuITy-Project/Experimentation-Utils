@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.BranchElement;
+import org.continuity.experimentation.element.NamedBooleanSupplier;
 
 /**
  * @author Henning Schulz
@@ -46,7 +47,16 @@ public class BranchBuilderImpl<C> extends AbstractExperimentBuilder<C> implement
 	 */
 	@Override
 	public IfBranchBuilder<C> ifThen(BooleanSupplier condition) {
+		return ifThen("?", condition);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IfBranchBuilder<C> ifThen(String name, BooleanSupplier condition) {
 		finishCurrentBranch();
+		currentCondition = new NamedBooleanSupplier(name, condition);
 		return this;
 	}
 

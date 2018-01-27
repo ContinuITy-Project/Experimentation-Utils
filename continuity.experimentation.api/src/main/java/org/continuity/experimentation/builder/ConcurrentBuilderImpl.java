@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.ConcurrentElement;
+import org.continuity.experimentation.element.NamedBooleanSupplier;
 
 /**
  * @author Henning Schulz
@@ -41,7 +42,15 @@ public class ConcurrentBuilderImpl<C> extends AbstractExperimentBuilder<C> imple
 	 */
 	@Override
 	public IfBranchBuilder<ConcurrentBuilder<C>> ifThen(BooleanSupplier condition) {
-		return new BranchBuilderImpl<>(this, this::appendElement, condition);
+		return ifThen("?", condition);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IfBranchBuilder<ConcurrentBuilder<C>> ifThen(String name, BooleanSupplier condition) {
+		return new BranchBuilderImpl<>(this, this::appendElement, new NamedBooleanSupplier(name, condition));
 	}
 
 	/**

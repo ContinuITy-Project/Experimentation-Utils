@@ -117,7 +117,7 @@ public class BranchElement implements IExperimentElement {
 	@Override
 	public double count() {
 		double sum = 0;
-		double num = branches.size();
+		double num = branches.size() + 1;
 
 		for (Pair<BooleanSupplier, IExperimentElement> branch : branches) {
 			sum += branch.getSecond().count();
@@ -125,7 +125,6 @@ public class BranchElement implements IExperimentElement {
 
 		if (elseBranch != null) {
 			sum += elseBranch.count();
-			num++;
 		}
 
 		return (sum / num) + (join.getNext() == null ? 0 : join.getNext().count());
@@ -144,13 +143,12 @@ public class BranchElement implements IExperimentElement {
 	 */
 	@Override
 	public String toString(String prefix) {
-		char counter = 'a';
 		StringBuilder builder = new StringBuilder();
 
 		for (Pair<BooleanSupplier, IExperimentElement> branch : branches) {
 			builder.append(prefix);
 			builder.append("IF ");
-			builder.append(counter++);
+			builder.append(branch.getFirst());
 			builder.append(":\n");
 			builder.append(branch.getSecond().toString(prefix + SHIFTING));
 		}

@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
 import org.continuity.experimentation.element.LoopElement;
+import org.continuity.experimentation.element.NamedBooleanSupplier;
 
 /**
  * @author Henning Schulz
@@ -43,7 +44,15 @@ public class LoopBuilderImpl<C> extends AbstractExperimentBuilder<C> implements 
 	 */
 	@Override
 	public IfBranchBuilder<LoopBuilder<C>> ifThen(BooleanSupplier condition) {
-		return new BranchBuilderImpl<>(this, this::appendElement, condition);
+		return ifThen("?", condition);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IfBranchBuilder<LoopBuilder<C>> ifThen(String name, BooleanSupplier condition) {
+		return new BranchBuilderImpl<>(this, this::appendElement, new NamedBooleanSupplier(name, condition));
 	}
 
 	/**

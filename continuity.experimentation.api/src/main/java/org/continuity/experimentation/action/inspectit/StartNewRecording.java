@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -79,7 +81,7 @@ public class StartNewRecording extends AbstractRestAction {
 	}
 
 	@Override
-	public void execute(Context context) {
+	public void execute(Context context) throws JsonParseException, JsonMappingException, IOException {
 		Date currentDate = new Date();
 		String pattern = "yyyy-MM-dd-HH-mm-ss";
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
@@ -94,17 +96,13 @@ public class StartNewRecording extends AbstractRestAction {
 
 		// Get id of created storage
 		ObjectMapper mapper = new ObjectMapper();
-		try {
-			ObjectNode node = mapper.readValue(creationResponse, ObjectNode.class);
-			String storageId = node.get("storage").get("id").asText();
+		ObjectNode node = mapper.readValue(creationResponse, ObjectNode.class);
+		String storageId = node.get("storage").get("id").asText();
 
-			UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/rest/storage/start").queryParam("id", storageId);
-			get(builder.build().encode().toUri().toString(), String.class);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/rest/storage/start").queryParam("id", storageId);
+		get(builder.build().encode().toUri().toString(), String.class);
 
-			LOGGER.info("Recording '" + storageName + "' started");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		LOGGER.info("Recording '" + storageName + "' started");
 	}
 
 	/**

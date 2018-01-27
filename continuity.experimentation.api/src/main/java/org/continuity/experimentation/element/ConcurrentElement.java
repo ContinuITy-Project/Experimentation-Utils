@@ -166,8 +166,7 @@ public class ConcurrentElement implements IExperimentElement {
 			try {
 				executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
-				LOGGER.warn("Thread was interrupted during waiting for the concurrent actions to finish!");
-				e.printStackTrace();
+				LOGGER.warn("Thread was interrupted during waiting for the concurrent actions to finish!", e);
 			}
 
 			if (thrownExceptions.size() == 1) {
@@ -204,8 +203,7 @@ public class ConcurrentElement implements IExperimentElement {
 				execute(context);
 			} catch (AbortException e) {
 				thrownException = e;
-				LOGGER.warn("An uncaught {} has been thrown! Passing it to the ConcurrentHandler.", e.getClass().getSimpleName());
-				e.printStackTrace();
+				LOGGER.warn("An uncaught exception has been thrown! Passing it to the ConcurrentHandler.", e);
 			}
 
 			context.remove(PREFIX_THREAD + number);

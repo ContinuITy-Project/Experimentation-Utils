@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import org.continuity.experimentation.Experiment;
 import org.continuity.experimentation.IExperimentAction;
 import org.continuity.experimentation.IExperimentElement;
+import org.continuity.experimentation.element.NamedBooleanSupplier;
 
 /**
  * @author Henning Schulz
@@ -42,7 +43,15 @@ public class ExperimentBuilderImpl extends AbstractExperimentBuilder<Experiment>
 	 */
 	@Override
 	public IfBranchBuilder<StableExperimentBuilder> ifThen(BooleanSupplier condition) {
-		return new BranchBuilderImpl<>(this, this::appendElement, condition);
+		return ifThen("?", condition);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IfBranchBuilder<StableExperimentBuilder> ifThen(String name, BooleanSupplier condition) {
+		return new BranchBuilderImpl<>(this, this::appendElement, new NamedBooleanSupplier(name, condition));
 	}
 
 	/**

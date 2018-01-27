@@ -23,4 +23,15 @@ public interface Branchable<T> {
 	 */
 	T ifThen(BooleanSupplier condition);
 
+	/**
+	 * Adds a new if branch.
+	 *
+	 * @param name
+	 *            Name of the branch.
+	 * @param condition
+	 *            The condition that must be {@code true} to execute this branch.
+	 * @return A builder for adding elements to the branch.
+	 */
+	T ifThen(String name, BooleanSupplier condition);
+
 }
