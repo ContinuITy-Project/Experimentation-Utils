@@ -3,6 +3,8 @@ package continuity.experimentation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -31,8 +33,9 @@ public class ExperimentContextTest {
 	private File fileMock;
 
 	@Before
-	public void setupMocks() {
+	public void setupMocks() throws IOException {
 		pathMock = Mockito.mock(Path.class);
+		Path rootPathMock = Mockito.mock(Path.class);
 		fileMock = Mockito.mock(File.class);
 		contextMock = Mockito.mock(Context.class);
 
@@ -40,6 +43,11 @@ public class ExperimentContextTest {
 
 		Mockito.when(contextMock.toPath()).thenReturn(pathMock);
 		Mockito.when(pathMock.toFile()).thenReturn(fileMock);
+
+		Mockito.when(pathMock.getName(0)).thenReturn(rootPathMock);
+		Mockito.when(rootPathMock.toFile()).thenReturn(fileMock);
+		Mockito.when(rootPathMock.resolve("experiment.log")).thenReturn(rootPathMock);
+		Mockito.when(rootPathMock.resolve("experiment.summary")).thenReturn(Files.createTempDirectory("ExperimentContextTest"));
 	}
 
 	@Test

@@ -1,6 +1,8 @@
 package continuity.experimentation;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.continuity.experimentation.Experiment;
@@ -25,11 +27,18 @@ public class ExperimentAbortingTest {
 	private MockedContext context;
 
 	@Before
-	public void setup() {
+	public void setup() throws IOException {
 		abortingAction = new AbortingAction();
 
 		Path pathMock = Mockito.mock(Path.class);
+
+		Path rootPathMock = Mockito.mock(Path.class);
 		File fileMock = Mockito.mock(File.class);
+		Mockito.when(rootPathMock.toFile()).thenReturn(fileMock);
+		Mockito.when(rootPathMock.resolve("experiment.log")).thenReturn(rootPathMock);
+		Mockito.when(rootPathMock.resolve("experiment.summary")).thenReturn(Files.createTempDirectory("ExperimentAbortingTest"));
+
+		Mockito.when(pathMock.getName(0)).thenReturn(rootPathMock);
 		Mockito.when(pathMock.toFile()).thenReturn(fileMock);
 		context = new MockedContext(pathMock);
 

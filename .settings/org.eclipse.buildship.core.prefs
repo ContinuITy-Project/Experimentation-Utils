@@ -1,3 +1,3 @@
-connection.gradle.distribution=GRADLE_DISTRIBUTION(WRAPPER)
-connection.project.dir=continuity.experimentation.api
+#Thu Mar 08 14:20:38 CET 2018
 eclipse.preferences.version=1
+connection.project.dir=

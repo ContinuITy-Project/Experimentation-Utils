@@ -2,3 +2,6 @@
 
 **/build/**
 **/continuity.email.credentials.properties
+Mock for Path, hashCode: *
+*.log
+*.summary

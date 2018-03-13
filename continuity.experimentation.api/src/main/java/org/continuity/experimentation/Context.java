@@ -44,7 +44,7 @@ public class Context implements Cloneable {
 
 	/**
 	 * Sets {@link #rootSuffix}.
-	 * 
+	 *
 	 * @param rootSuffix
 	 *            New value for {@link #rootSuffix}
 	 */
@@ -146,6 +146,10 @@ public class Context implements Cloneable {
 			}
 
 			builder.append(element.getRight());
+		}
+
+		if (builder.length() == 0) {
+			builder.append("<empty>");
 		}
 
 		return builder.toString();
