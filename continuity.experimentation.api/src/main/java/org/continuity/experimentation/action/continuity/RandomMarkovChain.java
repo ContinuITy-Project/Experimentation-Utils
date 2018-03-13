@@ -157,4 +157,9 @@ public class RandomMarkovChain implements IExperimentAction {
 		return "norm(" + thinkTime + " " + (thinkTime / 2) + ")";
 	}
 
+	@Override
+	public String toString() {
+		return "Create random Markov chain based on " + allowedTransitionsFilePath + " with average think time " + averageThinkTimeMs + " and store it in " + outputDataHolder;
+	}
+
 }

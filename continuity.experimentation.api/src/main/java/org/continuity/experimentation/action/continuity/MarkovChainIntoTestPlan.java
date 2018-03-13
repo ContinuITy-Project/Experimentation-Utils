@@ -59,4 +59,9 @@ public class MarkovChainIntoTestPlan implements IExperimentAction {
 		outputHolder.set(bundle);
 	}
 
+	@Override
+	public String toString() {
+		return "Merge Markov chain " + markovChainHolder + " into test plan " + testPlanPathHolder + " with key " + behaviorModelKey + " and store the result in " + outputHolder;
+	}
+
 }
