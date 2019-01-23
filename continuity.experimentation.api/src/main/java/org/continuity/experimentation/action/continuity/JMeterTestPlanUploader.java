@@ -1,6 +1,4 @@
 package org.continuity.experimentation.action.continuity;
-import static org.continuity.api.rest.RestApi.JMeter.TestPlan.Paths.POST;
-
 import java.io.IOException;
 
 import org.continuity.api.entities.links.LinkExchangeModel;
