@@ -171,8 +171,6 @@ public class Main {
 
 		LOGGER.info("Finished creating load tests");
 
-
-
 		executeLoadTests(orderResponse, orderReport, source, waitForOrderReport, prometheusDataExporter, getJmeterReport, getSessionLogs);
 
 		LOGGER.info("Successfully finished experiment");
@@ -353,7 +351,6 @@ public class Main {
 
 	/**
 	 * Loads the configuration
-	 *
 	 * @throws IOException
 	 */
 	private static void loadProperties() throws IOException {
